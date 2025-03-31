@@ -13,6 +13,7 @@ Este proyecto es una implementación de un sistema de cajero automático utiliza
 📌 Manejo de transacciones con commit y rollback para evitar inconsistencias.
 
 🛠️ Tecnologías utilizadas
+
 Java
 
 MySQL
