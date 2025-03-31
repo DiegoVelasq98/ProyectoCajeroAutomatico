@@ -1,7 +1,7 @@
 # ProyectoCajeroAutomatico
 Proyecto 1 de Base de Datos 2 (Cajero automático)
 
-Este proyecto es una implementación de un sistema de cajero automático utilizando Java y MySQL. Permite a los usuarios realizar operaciones bancarias como depósitos, retiros y transferencias de saldo entre cuentas.
+Este proyecto es una implementación de un sistema de cajero automático utilizando Java y MySQL y Oracle. Permite a los usuarios realizar operaciones bancarias como depósitos, retiros y transferencias de saldo entre cuentas.
 
 🚀 Características
 📌 Depósito de dinero en la cuenta del usuario.
@@ -17,5 +17,7 @@ Este proyecto es una implementación de un sistema de cajero automático utiliza
 Java
 
 MySQL
+
+Oracle
 
 JDBC
