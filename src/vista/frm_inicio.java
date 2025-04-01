@@ -286,7 +286,7 @@ public class frm_inicio extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "PIN incorrecto. Intenta de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
             }
             
-            // Cerrar ResultSet y PreparedStatement
+            // Cerrar ResultSet y PreparedStatementsss
             rs.close();
             ps.close();
             
