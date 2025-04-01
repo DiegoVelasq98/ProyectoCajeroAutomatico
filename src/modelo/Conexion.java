@@ -37,7 +37,6 @@ private final String jdbc = "com.mysql.cj.jdbc.Driver";
         }
     }
 
-//pruebass de git
 //metodo para cerrar la conexiones
 
 public void cerrar_conexion(){
