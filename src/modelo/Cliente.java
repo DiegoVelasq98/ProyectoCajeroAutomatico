@@ -9,7 +9,7 @@ package modelo;
  * @author Diego
  */
 public class Cliente {
-    
+    //pruebas para validar el push
     private int id;
     private String nombre;
     private double saldo;
