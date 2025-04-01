@@ -102,18 +102,22 @@
                   <EmptySpace type="separate" max="-2" attributes="0"/>
                   <Component id="pass" min="-2" pref="43" max="-2" attributes="0"/>
                   <EmptySpace min="-2" pref="53" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="btn_1" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btn_2" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btn_3" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="btn_pin" alignment="1" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="btn_1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_3" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace min="-2" pref="35" max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="btn_4" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btn_5" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btn_6" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="btn_borrar" alignment="0" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="btn_4" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_5" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btn_6" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
                   <EmptySpace min="-2" pref="34" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">

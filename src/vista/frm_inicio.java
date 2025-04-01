@@ -209,17 +209,19 @@ public class frm_inicio extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(pass, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(53, 53, 53)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_1)
-                    .addComponent(btn_2)
-                    .addComponent(btn_3)
-                    .addComponent(btn_pin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btn_pin, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btn_1)
+                        .addComponent(btn_2)
+                        .addComponent(btn_3)))
                 .addGap(35, 35, 35)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_4)
-                    .addComponent(btn_5)
-                    .addComponent(btn_6)
-                    .addComponent(btn_borrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btn_borrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btn_4)
+                        .addComponent(btn_5)
+                        .addComponent(btn_6)))
                 .addGap(34, 34, 34)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_7)
@@ -258,7 +260,7 @@ public class frm_inicio extends javax.swing.JFrame {
     private void btn_pinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_pinActionPerformed
     String pinIngresado = pass.getText();  // Obtiene el PIN ingresado en el campo de texto
 
-    // Instancia de la clase Conexion
+    // Instancia de la clase Conexiones
     Conexion conexion = new Conexion();
     
     // Conectar a la base de datos
@@ -273,7 +275,7 @@ public class frm_inicio extends javax.swing.JFrame {
             if (rs.next()) {
                 // Si el PIN es correcto, obtenemos el nombre del cliente
                 String nombreCliente = rs.getString("nombre_cliente");
-                JOptionPane.showMessageDialog(this, "Bienvenido, " + nombreCliente, "Acceso permitido", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Bienvenido, " + nombreCliente, "Acceso permitido señor", JOptionPane.INFORMATION_MESSAGE);
                 
                 // Abre el formulario de menú
                 frm_menu fr = new frm_menu();
