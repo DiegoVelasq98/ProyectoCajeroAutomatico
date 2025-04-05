@@ -6,11 +6,12 @@ package vista;
 import java.sql.*;
 import javax.swing.JOptionPane;
 import modelo.Conexion;
+import modelo.SesionUsuario;
 /**
  *
  * @author Diego
  */
-public class frm_inicio extends javax.swing.JFrame {
+public class frm_inicio extends BaseForm {
 
     /**
      * Creates new form frm_inicio
@@ -30,7 +31,7 @@ public class frm_inicio extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         btn_pin = new java.awt.Button();
-        pass = new javax.swing.JPasswordField();
+        txt_pass = new javax.swing.JPasswordField();
         lbl_pin = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         btn_1 = new javax.swing.JButton();
@@ -59,11 +60,11 @@ public class frm_inicio extends javax.swing.JFrame {
             }
         });
 
-        pass.setBackground(new java.awt.Color(0, 204, 204));
-        pass.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 5));
-        pass.addActionListener(new java.awt.event.ActionListener() {
+        txt_pass.setBackground(new java.awt.Color(0, 204, 204));
+        txt_pass.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 5));
+        txt_pass.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                passActionPerformed(evt);
+                txt_passActionPerformed(evt);
             }
         });
 
@@ -165,6 +166,11 @@ public class frm_inicio extends javax.swing.JFrame {
         btn_cancelar.setBackground(new java.awt.Color(255, 0, 0));
         btn_cancelar.setFont(new java.awt.Font("Ubuntu Mono", 1, 24)); // NOI18N
         btn_cancelar.setLabel("Cancelar");
+        btn_cancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_cancelarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -203,7 +209,7 @@ public class frm_inicio extends javax.swing.JFrame {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel1)
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addComponent(pass, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(txt_pass, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(9, 9, 9)))))
                         .addGap(0, 23, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -220,7 +226,7 @@ public class frm_inicio extends javax.swing.JFrame {
                 .addGap(18, 18, 18)
                 .addComponent(lbl_pin)
                 .addGap(18, 18, 18)
-                .addComponent(pass, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_pass, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(26, 26, 26)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -273,94 +279,103 @@ public class frm_inicio extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_1ActionPerformed
-        pass.setText(pass.getText() + "1");    }//GEN-LAST:event_btn_1ActionPerformed
+        txt_pass.setText(txt_pass.getText() + "1");    }//GEN-LAST:event_btn_1ActionPerformed
 
     private void btn_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_2ActionPerformed
-         pass.setText(pass.getText() + "2");
+         txt_pass.setText(txt_pass.getText() + "2");
     }//GEN-LAST:event_btn_2ActionPerformed
 
     private void btn_4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_4ActionPerformed
- pass.setText(pass.getText() + "4");    }//GEN-LAST:event_btn_4ActionPerformed
+ txt_pass.setText(txt_pass.getText() + "4");    }//GEN-LAST:event_btn_4ActionPerformed
 
     private void btn_pinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_pinActionPerformed
-    String pinIngresado = pass.getText();  // Obtiene el PIN ingresado en el campo de texto
+   
+        String pinIngresado = txt_pass.getText(); 
 
-    // Instancia de la clase Conexiones
+    
     Conexion conexion = new Conexion();
     
-    // Conectar a la base de datos
+   
     if (conexion.abrir_conexion()) {
         try {
-            // Query para buscar el PIN en la base de datos
-            String sql = "SELECT nombre_cliente FROM usuarios WHERE pin = ?";
-            PreparedStatement ps = conexion.conexion_bd.prepareStatement(sql);
-            ps.setString(1, pinIngresado);  // Establece el valor del PIN ingresado
-            ResultSet rs = ps.executeQuery();
             
-            if (rs.next()) {
-                // Si el PIN es correcto, obtenemos el nombre del cliente
-                String nombreCliente = rs.getString("nombre_cliente");
-                JOptionPane.showMessageDialog(this, "Bienvenido, " + nombreCliente, "Acceso permitido señor", JOptionPane.INFORMATION_MESSAGE);
+           
+            String query = "SELECT nombre_cliente FROM usuarios WHERE pin = ?";
+            PreparedStatement parametro = conexion.conexion_bd.prepareStatement(query);
+            parametro.setString(1, pinIngresado);  
+            ResultSet cambio = parametro.executeQuery();
+            
+            if (cambio.next()) {
                 
-                // Abre el formulario de menú
+                String nombreCliente = cambio.getString("nombre_cliente");
+
+               
+                SesionUsuario.setUsuarioActual(nombreCliente);
+                JOptionPane.showMessageDialog(this, "Bienvenido, " + nombreCliente, "Acceso permitido", JOptionPane.INFORMATION_MESSAGE);
+                
+         
                 frm_menu fr = new frm_menu();
                 fr.setVisible(true);
-                dispose();  // Cierra el formulario actual
+                dispose();  
             } else {
-                // Si el PIN no es válido
+              
                 JOptionPane.showMessageDialog(this, "PIN incorrecto. Intenta de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
             }
             
-            // Cerrar ResultSet y PreparedStatement
-            rs.close();
-            ps.close();
+           
+            cambio.close();
+            parametro.close();
             
         } catch (SQLException e) {
             JOptionPane.showMessageDialog(this, "Error al verificar el PIN: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         } finally {
-            // Desconectar de la base de datos
+           
             conexion.cerrar_conexion();
         }
     } else {
         JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
     }
         
-        
             }//GEN-LAST:event_btn_pinActionPerformed
 
     private void btn_3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_3ActionPerformed
- pass.setText(pass.getText() + "3");    }//GEN-LAST:event_btn_3ActionPerformed
+ txt_pass.setText(txt_pass.getText() + "3");    }//GEN-LAST:event_btn_3ActionPerformed
 
     private void btn_5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_5ActionPerformed
- pass.setText(pass.getText() + "5");    }//GEN-LAST:event_btn_5ActionPerformed
+ txt_pass.setText(txt_pass.getText() + "5");    }//GEN-LAST:event_btn_5ActionPerformed
 
     private void btn_6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_6ActionPerformed
- pass.setText(pass.getText() + "6");    }//GEN-LAST:event_btn_6ActionPerformed
+ txt_pass.setText(txt_pass.getText() + "6");    }//GEN-LAST:event_btn_6ActionPerformed
 
     private void btn_7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_7ActionPerformed
- pass.setText(pass.getText() + "7");    }//GEN-LAST:event_btn_7ActionPerformed
+ txt_pass.setText(txt_pass.getText() + "7");    }//GEN-LAST:event_btn_7ActionPerformed
 
     private void btn_8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_8ActionPerformed
- pass.setText(pass.getText() + "8");    }//GEN-LAST:event_btn_8ActionPerformed
+ txt_pass.setText(txt_pass.getText() + "8");    }//GEN-LAST:event_btn_8ActionPerformed
 
     private void btn_9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_9ActionPerformed
- pass.setText(pass.getText() + "9");    }//GEN-LAST:event_btn_9ActionPerformed
+ txt_pass.setText(txt_pass.getText() + "9");    }//GEN-LAST:event_btn_9ActionPerformed
 
     private void btn_0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_0ActionPerformed
- pass.setText(pass.getText() + "0");    }//GEN-LAST:event_btn_0ActionPerformed
+ txt_pass.setText(txt_pass.getText() + "0");    }//GEN-LAST:event_btn_0ActionPerformed
 
     private void btn_borrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_borrarActionPerformed
 
-        String currentText = pass.getText();
+        String currentText = txt_pass.getText();
         if (currentText.length()>0){
-            pass.setText(currentText.substring(0, currentText.length()-1));
+            txt_pass.setText(currentText.substring(0, currentText.length()-1));
         }
 
     }//GEN-LAST:event_btn_borrarActionPerformed
 
-    private void passActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passActionPerformed
+    private void txt_passActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_passActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_passActionPerformed
+    }//GEN-LAST:event_txt_passActionPerformed
+
+    private void btn_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelarActionPerformed
+        System.exit(0);
+
+    }//GEN-LAST:event_btn_cancelarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -415,6 +430,6 @@ public class frm_inicio extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lbl_pin;
-    private javax.swing.JPasswordField pass;
+    private javax.swing.JPasswordField txt_pass;
     // End of variables declaration//GEN-END:variables
 }

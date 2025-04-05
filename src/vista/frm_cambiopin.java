@@ -4,17 +4,24 @@
  */
 package vista;
 
+import javax.swing.JOptionPane;
+import modelo.Pin;
+import modelo.SesionUsuario;
+
 /**
  *
  * @author Diego
  */
-public class frm_cambiopin extends javax.swing.JFrame {
+public class frm_cambiopin extends BaseForm {
 
     /**
      * Creates new form frm_cambiopin
      */
     public frm_cambiopin() {
+        
+    
         initComponents();
+             lbl_usuario.setText("Sesión de: " + usuarioActual);
     }
 
     /**
@@ -28,7 +35,7 @@ public class frm_cambiopin extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         lbl_pin = new javax.swing.JLabel();
-        pass = new javax.swing.JPasswordField();
+        txt_pin = new javax.swing.JPasswordField();
         btn_1 = new javax.swing.JButton();
         btn_2 = new javax.swing.JButton();
         btn_3 = new javax.swing.JButton();
@@ -40,17 +47,19 @@ public class frm_cambiopin extends javax.swing.JFrame {
         btn_9 = new javax.swing.JButton();
         btn_0 = new javax.swing.JButton();
         btn_cambiopin = new java.awt.Button();
+        lbl_usuario = new javax.swing.JLabel();
+        btn_regresar = new java.awt.Button();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         lbl_pin.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lbl_pin.setText("Ingrese su nuevo PIN");
 
-        pass.setBackground(new java.awt.Color(0, 204, 204));
-        pass.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 5));
-        pass.addActionListener(new java.awt.event.ActionListener() {
+        txt_pin.setBackground(new java.awt.Color(0, 204, 204));
+        txt_pin.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 5));
+        txt_pin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                passActionPerformed(evt);
+                txt_pinActionPerformed(evt);
             }
         });
 
@@ -143,6 +152,15 @@ public class frm_cambiopin extends javax.swing.JFrame {
             }
         });
 
+        btn_regresar.setBackground(new java.awt.Color(255, 0, 51));
+        btn_regresar.setFont(new java.awt.Font("Ubuntu Mono", 1, 24)); // NOI18N
+        btn_regresar.setLabel("Regresar");
+        btn_regresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_regresarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -152,7 +170,7 @@ public class frm_cambiopin extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addGap(108, 108, 108)
-                            .addComponent(pass, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txt_pin, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGroup(jPanel1Layout.createSequentialGroup()
                             .addGap(126, 126, 126)
                             .addComponent(lbl_pin)))
@@ -178,15 +196,25 @@ public class frm_cambiopin extends javax.swing.JFrame {
                                     .addComponent(btn_9, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(btn_6, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addGap(15, 15, 15)
-                .addComponent(btn_cambiopin, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btn_cambiopin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btn_regresar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(86, 86, 86)
+                .addComponent(lbl_usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 164, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(50, 50, 50)
+                .addGap(22, 22, 22)
+                .addComponent(lbl_usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lbl_pin)
                 .addGap(18, 18, 18)
-                .addComponent(pass, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txt_pin, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -198,12 +226,16 @@ public class frm_cambiopin extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(62, 62, 62)
                         .addComponent(btn_cambiopin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 15, Short.MAX_VALUE)))
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_4)
-                    .addComponent(btn_5)
-                    .addComponent(btn_6))
-                .addGap(34, 34, 34)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(btn_4)
+                        .addComponent(btn_5)
+                        .addComponent(btn_6))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(btn_regresar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(24, 24, 24)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btn_7)
                     .addComponent(btn_8)
@@ -230,56 +262,95 @@ public class frm_cambiopin extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void passActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_passActionPerformed
+    private void txt_pinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_pinActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_passActionPerformed
+    }//GEN-LAST:event_txt_pinActionPerformed
 
     private void btn_1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_1ActionPerformed
-pass.setText(pass.getText() + "1");
+txt_pin.setText(txt_pin.getText() + "1");
     }//GEN-LAST:event_btn_1ActionPerformed
 
     private void btn_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_2ActionPerformed
-        pass.setText(pass.getText() + "2");
+        txt_pin.setText(txt_pin.getText() + "2");
     }//GEN-LAST:event_btn_2ActionPerformed
 
     private void btn_3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_3ActionPerformed
-pass.setText(pass.getText() + "3");
+txt_pin.setText(txt_pin.getText() + "3");
     }//GEN-LAST:event_btn_3ActionPerformed
 
     private void btn_4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_4ActionPerformed
-pass.setText(pass.getText() + "4");
+txt_pin.setText(txt_pin.getText() + "4");
     }//GEN-LAST:event_btn_4ActionPerformed
 
     private void btn_5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_5ActionPerformed
-pass.setText(pass.getText() + "5");
+txt_pin.setText(txt_pin.getText() + "5");
     }//GEN-LAST:event_btn_5ActionPerformed
 
     private void btn_6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_6ActionPerformed
-pass.setText(pass.getText() + "6");
+txt_pin.setText(txt_pin.getText() + "6");
     }//GEN-LAST:event_btn_6ActionPerformed
 
     private void btn_7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_7ActionPerformed
-pass.setText(pass.getText() + "7");
+txt_pin.setText(txt_pin.getText() + "7");
     }//GEN-LAST:event_btn_7ActionPerformed
 
     private void btn_8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_8ActionPerformed
-pass.setText(pass.getText() + "8");
+txt_pin.setText(txt_pin.getText() + "8");
     }//GEN-LAST:event_btn_8ActionPerformed
 
     private void btn_9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_9ActionPerformed
-pass.setText(pass.getText() + "9");
+txt_pin.setText(txt_pin.getText() + "9");
     }//GEN-LAST:event_btn_9ActionPerformed
 
     private void btn_0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_0ActionPerformed
-pass.setText(pass.getText() + "0");
+txt_pin.setText(txt_pin.getText() + "0");
     }//GEN-LAST:event_btn_0ActionPerformed
 
     private void btn_cambiopinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cambiopinActionPerformed
-        
 
+    String nuevoPin = txt_pin.getText().trim();
+
+    
+    if (!nuevoPin.matches("\\d{4}")) {
+        JOptionPane.showMessageDialog(this, "El PIN debe ser de 4 dígitos numéricos.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    } 
+    
+        String usuario = SesionUsuario.getUsuarioActual();
+
+    
+    if (usuario == null || usuario.isEmpty()) {
+        JOptionPane.showMessageDialog(this, "Error: No se ha detectado una sesión activa.", "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    
+    Pin objPin = new Pin(usuario, nuevoPin);
+    int resultado = objPin.actualizarPin();
+
+    if (resultado > 0) {
+        JOptionPane.showMessageDialog(this, "PIN actualizado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+    } else {
+        JOptionPane.showMessageDialog(this, "Error al actualizar el PIN. Asegúrate de que el usuario existe en la BD.", "Error", JOptionPane.ERROR_MESSAGE);
+    }
     }//GEN-LAST:event_btn_cambiopinActionPerformed
+
+    private void btn_regresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_regresarActionPerformed
+       SesionUsuario.setUsuarioActual(null);
+       
+       this.dispose();
+       
+       frm_inicio inicio =new frm_inicio();
+      inicio.setVisible(true);
+       
+       
+        
+        
+        
+    }//GEN-LAST:event_btn_regresarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -328,8 +399,10 @@ pass.setText(pass.getText() + "0");
     private javax.swing.JButton btn_8;
     private javax.swing.JButton btn_9;
     private java.awt.Button btn_cambiopin;
+    private java.awt.Button btn_regresar;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lbl_pin;
-    private javax.swing.JPasswordField pass;
+    private javax.swing.JLabel lbl_usuario;
+    private javax.swing.JPasswordField txt_pin;
     // End of variables declaration//GEN-END:variables
 }
