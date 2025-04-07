@@ -31,7 +31,7 @@ public class frm_inicio extends BaseForm {
 
         jPanel1 = new javax.swing.JPanel();
         btn_pin = new java.awt.Button();
-        txt_pass = new javax.swing.JPasswordField();
+        txt_pin = new javax.swing.JPasswordField();
         lbl_pin = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         btn_1 = new javax.swing.JButton();
@@ -47,6 +47,8 @@ public class frm_inicio extends BaseForm {
         btn_borrar = new java.awt.Button();
         btn_cancelar = new java.awt.Button();
         jSeparator1 = new javax.swing.JSeparator();
+        txt_user = new javax.swing.JTextField();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
@@ -60,15 +62,15 @@ public class frm_inicio extends BaseForm {
             }
         });
 
-        txt_pass.setBackground(new java.awt.Color(0, 204, 204));
-        txt_pass.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 5));
-        txt_pass.addActionListener(new java.awt.event.ActionListener() {
+        txt_pin.setBackground(new java.awt.Color(0, 204, 204));
+        txt_pin.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 5));
+        txt_pin.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_passActionPerformed(evt);
+                txt_pinActionPerformed(evt);
             }
         });
 
-        lbl_pin.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
+        lbl_pin.setFont(new java.awt.Font("Ubuntu Mono", 1, 14)); // NOI18N
         lbl_pin.setText("Ingrese su pin");
 
         jLabel1.setFont(new java.awt.Font("Ubuntu Mono", 1, 18)); // NOI18N
@@ -172,6 +174,11 @@ public class frm_inicio extends BaseForm {
             }
         });
 
+        txt_user.setBackground(new java.awt.Color(0, 204, 204));
+
+        jLabel2.setFont(new java.awt.Font("Ubuntu Mono", 1, 14)); // NOI18N
+        jLabel2.setText("Ingrese su usuario");
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -205,29 +212,37 @@ public class frm_inicio extends BaseForm {
                                     .addComponent(btn_pin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(btn_cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(132, 132, 132)
+                                .addGap(136, 136, 136)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel1)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                                        .addComponent(txt_pass, javax.swing.GroupLayout.PREFERRED_SIZE, 194, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(9, 9, 9)))))
-                        .addGap(0, 23, Short.MAX_VALUE)))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(11, 11, 11)
+                                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txt_pin, javax.swing.GroupLayout.DEFAULT_SIZE, 194, Short.MAX_VALUE)
+                                            .addComponent(txt_user)))
+                                    .addGroup(jPanel1Layout.createSequentialGroup()
+                                        .addGap(47, 47, 47)
+                                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 141, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(200, 200, 200)
+                                .addComponent(lbl_pin)))
+                        .addGap(0, 45, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(lbl_pin)
-                .addGap(187, 187, 187))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(29, 29, 29)
+                .addContainerGap()
                 .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
+                .addComponent(jLabel2)
                 .addGap(18, 18, 18)
+                .addComponent(txt_user, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
                 .addComponent(lbl_pin)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(txt_pin, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(txt_pass, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -254,7 +269,7 @@ public class frm_inicio extends BaseForm {
                     .addComponent(btn_cancelar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addComponent(btn_0)
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addGap(25, 25, 25))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -279,18 +294,18 @@ public class frm_inicio extends BaseForm {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_1ActionPerformed
-        txt_pass.setText(txt_pass.getText() + "1");    }//GEN-LAST:event_btn_1ActionPerformed
+        txt_pin.setText(txt_pin.getText() + "1");    }//GEN-LAST:event_btn_1ActionPerformed
 
     private void btn_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_2ActionPerformed
-         txt_pass.setText(txt_pass.getText() + "2");
+         txt_pin.setText(txt_pin.getText() + "2");
     }//GEN-LAST:event_btn_2ActionPerformed
 
     private void btn_4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_4ActionPerformed
- txt_pass.setText(txt_pass.getText() + "4");    }//GEN-LAST:event_btn_4ActionPerformed
+ txt_pin.setText(txt_pin.getText() + "4");    }//GEN-LAST:event_btn_4ActionPerformed
 
     private void btn_pinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_pinActionPerformed
    
-        String pinIngresado = txt_pass.getText(); 
+        String pinIngresado = txt_pin.getText(); 
 
     
     Conexion conexion = new Conexion();
@@ -320,6 +335,8 @@ public class frm_inicio extends BaseForm {
             } else {
               
                 JOptionPane.showMessageDialog(this, "PIN incorrecto. Intenta de nuevo.", "Error", JOptionPane.ERROR_MESSAGE);
+                txt_pin.setText("");
+                txt_pin.requestFocus();
             }
             
            
@@ -339,38 +356,38 @@ public class frm_inicio extends BaseForm {
             }//GEN-LAST:event_btn_pinActionPerformed
 
     private void btn_3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_3ActionPerformed
- txt_pass.setText(txt_pass.getText() + "3");    }//GEN-LAST:event_btn_3ActionPerformed
+ txt_pin.setText(txt_pin.getText() + "3");    }//GEN-LAST:event_btn_3ActionPerformed
 
     private void btn_5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_5ActionPerformed
- txt_pass.setText(txt_pass.getText() + "5");    }//GEN-LAST:event_btn_5ActionPerformed
+ txt_pin.setText(txt_pin.getText() + "5");    }//GEN-LAST:event_btn_5ActionPerformed
 
     private void btn_6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_6ActionPerformed
- txt_pass.setText(txt_pass.getText() + "6");    }//GEN-LAST:event_btn_6ActionPerformed
+ txt_pin.setText(txt_pin.getText() + "6");    }//GEN-LAST:event_btn_6ActionPerformed
 
     private void btn_7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_7ActionPerformed
- txt_pass.setText(txt_pass.getText() + "7");    }//GEN-LAST:event_btn_7ActionPerformed
+ txt_pin.setText(txt_pin.getText() + "7");    }//GEN-LAST:event_btn_7ActionPerformed
 
     private void btn_8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_8ActionPerformed
- txt_pass.setText(txt_pass.getText() + "8");    }//GEN-LAST:event_btn_8ActionPerformed
+ txt_pin.setText(txt_pin.getText() + "8");    }//GEN-LAST:event_btn_8ActionPerformed
 
     private void btn_9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_9ActionPerformed
- txt_pass.setText(txt_pass.getText() + "9");    }//GEN-LAST:event_btn_9ActionPerformed
+ txt_pin.setText(txt_pin.getText() + "9");    }//GEN-LAST:event_btn_9ActionPerformed
 
     private void btn_0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_0ActionPerformed
- txt_pass.setText(txt_pass.getText() + "0");    }//GEN-LAST:event_btn_0ActionPerformed
+ txt_pin.setText(txt_pin.getText() + "0");    }//GEN-LAST:event_btn_0ActionPerformed
 
     private void btn_borrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_borrarActionPerformed
 
-        String currentText = txt_pass.getText();
+        String currentText = txt_pin.getText();
         if (currentText.length()>0){
-            txt_pass.setText(currentText.substring(0, currentText.length()-1));
+            txt_pin.setText(currentText.substring(0, currentText.length()-1));
         }
 
     }//GEN-LAST:event_btn_borrarActionPerformed
 
-    private void txt_passActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_passActionPerformed
+    private void txt_pinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_pinActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txt_passActionPerformed
+    }//GEN-LAST:event_txt_pinActionPerformed
 
     private void btn_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelarActionPerformed
         System.exit(0);
@@ -427,9 +444,11 @@ public class frm_inicio extends BaseForm {
     private java.awt.Button btn_cancelar;
     private java.awt.Button btn_pin;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lbl_pin;
-    private javax.swing.JPasswordField txt_pass;
+    private javax.swing.JPasswordField txt_pin;
+    private javax.swing.JTextField txt_user;
     // End of variables declaration//GEN-END:variables
 }
