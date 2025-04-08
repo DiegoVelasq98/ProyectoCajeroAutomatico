@@ -307,59 +307,73 @@ public class frm_inicio extends BaseForm {
  txt_pass.setText(txt_pass.getText() + "4");    }//GEN-LAST:event_btn_4ActionPerformed
 
     private void btn_pinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_pinActionPerformed
-    String idClienteIngresado = txt_usuario.getText().trim().toUpperCase();
+        String idClienteIngresado = txt_usuario.getText().trim().toUpperCase();
     String pinIngresado = txt_pass.getText();
-    
-    // Validaciones previas (formato ID y PIN)...
-    
+
+    // Validaciones básicas
+    if (idClienteIngresado.isEmpty() || pinIngresado.isEmpty()) {
+        JOptionPane.showMessageDialog(this, 
+                "Debe ingresar el ID de cliente y el PIN.",
+                "Campos vacíos",
+                JOptionPane.WARNING_MESSAGE);
+        return;
+    }
+
     Conexion conexion = new Conexion();
-    
-    if(conexion.abrir_conexion()) {
+
+    if (conexion.abrir_conexion()) {
         try {
-            // Consulta SOLO para autenticación
-            String authQuery = "SELECT nombre_cliente FROM cliente WHERE id_cliente = ? AND pin_hash = STANDARD_HASH(?, 'SHA256')";
+            // Consulta sin usar hash, validando directamente el PIN (no recomendado en producción)
+            String authQuery = "SELECT nombre_cliente FROM cliente WHERE id_cliente = ? AND pin = ?";
             PreparedStatement authStmt = conexion.conexion_bd.prepareStatement(authQuery);
             authStmt.setString(1, idClienteIngresado);
             authStmt.setString(2, pinIngresado);
-            
+
             ResultSet authResult = authStmt.executeQuery();
-            
-            if(authResult.next()) {
+
+            if (authResult.next()) {
                 // Autenticación exitosa
                 String nombreCliente = authResult.getString("nombre_cliente");
-                
-                // Crear objeto Cliente con datos básicos
+
                 Cliente cliente = new Cliente();
                 cliente.setIdCliente(idClienteIngresado);
                 cliente.setNombre(nombreCliente);
-                
-                // Guardar cliente en sesión (sin saldo todavía)
+
+                // Guardar cliente en sesión
                 SesionUsuario.setClienteActual(cliente);
-                
-                // Obtener saldo SOLO si es necesario
-                
-                
+
                 JOptionPane.showMessageDialog(this, 
-                    "Bienvenido, " + nombreCliente, 
-                    "Acceso permitido", 
-                    JOptionPane.INFORMATION_MESSAGE);
-                
+                        "Bienvenido, " + nombreCliente,
+                        "Acceso permitido",
+                        JOptionPane.INFORMATION_MESSAGE);
+
                 frm_menu menu = new frm_menu();
                 menu.setVisible(true);
                 this.dispose();
             } else {
-                // Manejo de error...
+                JOptionPane.showMessageDialog(this, 
+                        "ID o PIN incorrecto. Intente de nuevo.",
+                        "Acceso denegado",
+                        JOptionPane.ERROR_MESSAGE);
             }
-            
+
             authResult.close();
             authStmt.close();
-        } catch(SQLException e) {
-            // Manejo de errores...
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al autenticar: " + e.getMessage(),
+                    "Error en base de datos",
+                    JOptionPane.ERROR_MESSAGE);
         } finally {
             conexion.cerrar_conexion();
         }
+    } else {
+        JOptionPane.showMessageDialog(this,
+                "No se pudo conectar a la base de datos.",
+                "Error de conexión",
+                JOptionPane.ERROR_MESSAGE);
     }
- 
         
             }//GEN-LAST:event_btn_pinActionPerformed
 
