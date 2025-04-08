@@ -1,16 +1,7 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package modelo;
 
-/**
- *
- * @author Diego
- */
 public class Prestamos {
-    
-    
+
     private double monto;
     private double interes;
     private int plazo;
@@ -20,15 +11,18 @@ public class Prestamos {
         this.interes = interes;
         this.plazo = plazo;
     }
-    
-    
-   public double CalcularCouta(){
-       double interesMensual = interes/100;
-       return (monto* interesMensual)/ (1-Math.pow(1+ interesMensual, -plazo));
-   }
-   
-   public double CalcularTotal(){
-       
-       return CalcularCouta()*plazo;
-   }
+
+    // Calcular cuota mensual usando interés simple
+    public double calcularCuota() {
+        double interesDecimal = interes / 100;
+        double interesTotal = monto * interesDecimal * plazo;
+        return (monto + interesTotal) / plazo;
+    }
+
+    // Calcular total a pagar usando interés simple
+    public double calcularTotal() {
+        double interesDecimal = interes / 100;
+        double interesTotal = monto * interesDecimal * plazo;
+        return monto + interesTotal;
+    }
 }
