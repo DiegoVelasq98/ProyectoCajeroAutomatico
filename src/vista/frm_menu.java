@@ -4,6 +4,7 @@
  */
 package vista;
 
+import javax.swing.JOptionPane;
 import modelo.SesionUsuario;
 
 /**
@@ -18,8 +19,17 @@ public class frm_menu extends BaseForm {
     public frm_menu() {
         initComponents();
         
-        String usuario = SesionUsuario.getUsuarioActual();
-lbl_usuario.setText("Sesión de: " + usuario);
+        if (this.clienteActual != null) {
+            lbl_usuario.setText("Sesión de: " + this.clienteActual.getNombre());
+        } else {
+            lbl_usuario.setText("No hay sesión activa");
+            JOptionPane.showMessageDialog(this, 
+                "No se encontró sesión activa", 
+                "Error", 
+                JOptionPane.ERROR_MESSAGE);
+            this.dispose();
+            new frm_inicio().setVisible(true);
+        }
 
     }
 

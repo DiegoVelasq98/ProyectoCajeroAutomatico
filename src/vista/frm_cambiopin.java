@@ -5,7 +5,10 @@
 package vista;
 
 import javax.swing.JOptionPane;
+import modelo.Conexion;
 import modelo.Pin;
+import java.sql.*;  
+import modelo.BancoException;
 import modelo.SesionUsuario;
 
 /**
@@ -18,10 +21,19 @@ public class frm_cambiopin extends BaseForm {
      * Creates new form frm_cambiopin
      */
     public frm_cambiopin() {
-        
+      initComponents(); // Primero inicializa los componentes
     
-        initComponents();
-             lbl_usuario.setText("Sesión de: " + usuarioActual);
+    // Luego realiza las operaciones con los componentes
+    if (this.clienteActual != null) {
+        lbl_usuario.setText("Sesión de: " + clienteActual.getNombre());
+    } else {
+        JOptionPane.showMessageDialog(this,
+                "No hay sesión activa",
+                "Error",
+                JOptionPane.ERROR_MESSAGE);
+        this.dispose();
+        new frm_inicio().setVisible(true);
+    }
     }
 
     /**
@@ -270,7 +282,7 @@ public class frm_cambiopin extends BaseForm {
     }//GEN-LAST:event_txt_pinActionPerformed
 
     private void btn_1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_1ActionPerformed
-txt_pin.setText(txt_pin.getText() + "1");
+        txt_pin.setText(txt_pin.getText() + "1");
     }//GEN-LAST:event_btn_1ActionPerformed
 
     private void btn_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_2ActionPerformed
@@ -278,78 +290,109 @@ txt_pin.setText(txt_pin.getText() + "1");
     }//GEN-LAST:event_btn_2ActionPerformed
 
     private void btn_3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_3ActionPerformed
-txt_pin.setText(txt_pin.getText() + "3");
+        txt_pin.setText(txt_pin.getText() + "3");
     }//GEN-LAST:event_btn_3ActionPerformed
 
     private void btn_4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_4ActionPerformed
-txt_pin.setText(txt_pin.getText() + "4");
+        txt_pin.setText(txt_pin.getText() + "4");
     }//GEN-LAST:event_btn_4ActionPerformed
 
     private void btn_5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_5ActionPerformed
-txt_pin.setText(txt_pin.getText() + "5");
+        txt_pin.setText(txt_pin.getText() + "5");
     }//GEN-LAST:event_btn_5ActionPerformed
 
     private void btn_6ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_6ActionPerformed
-txt_pin.setText(txt_pin.getText() + "6");
+        txt_pin.setText(txt_pin.getText() + "6");
     }//GEN-LAST:event_btn_6ActionPerformed
 
     private void btn_7ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_7ActionPerformed
-txt_pin.setText(txt_pin.getText() + "7");
+        txt_pin.setText(txt_pin.getText() + "7");
     }//GEN-LAST:event_btn_7ActionPerformed
 
     private void btn_8ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_8ActionPerformed
-txt_pin.setText(txt_pin.getText() + "8");
+        txt_pin.setText(txt_pin.getText() + "8");
     }//GEN-LAST:event_btn_8ActionPerformed
 
     private void btn_9ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_9ActionPerformed
-txt_pin.setText(txt_pin.getText() + "9");
+        txt_pin.setText(txt_pin.getText() + "9");
     }//GEN-LAST:event_btn_9ActionPerformed
 
     private void btn_0ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_0ActionPerformed
-txt_pin.setText(txt_pin.getText() + "0");
+        txt_pin.setText(txt_pin.getText() + "0");
     }//GEN-LAST:event_btn_0ActionPerformed
 
     private void btn_cambiopinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cambiopinActionPerformed
-
-    String nuevoPin = txt_pin.getText().trim();
-
-    
-    if (!nuevoPin.matches("\\d{4}")) {
-        JOptionPane.showMessageDialog(this, "El PIN debe ser de 4 dígitos numéricos.", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    } 
-    
-        String usuario = SesionUsuario.getUsuarioActual();
-
-    
-    if (usuario == null || usuario.isEmpty()) {
-        JOptionPane.showMessageDialog(this, "Error: No se ha detectado una sesión activa.", "Error", JOptionPane.ERROR_MESSAGE);
-        return;
+                                                     
+    try {
+        String nuevoPin = new String(txt_pin.getPassword()).trim();
+        
+        // Validación con excepción personalizada
+        if (!nuevoPin.matches("\\d{4}")) {
+            throw new BancoException("El PIN debe contener exactamente 4 dígitos numéricos");
+        }
+        
+        if (this.clienteActual == null) {
+            throw new BancoException("No hay sesión activa");
+        }
+        
+        // Operación que puede lanzar SQLException
+        Pin objPin = new Pin(clienteActual.getIdCliente(), nuevoPin);
+        int resultado = objPin.actualizarPin();
+        
+        if (resultado <= 0) {
+            throw new BancoException("No se pudo actualizar el PIN");
+        }
+        
+        JOptionPane.showMessageDialog(this, "PIN actualizado correctamente");
+        
+    } catch (BancoException e) {
+        // Captura específica para errores de negocio
+        JOptionPane.showMessageDialog(this, 
+            e.getMessage(), 
+            "Error en la aplicación", 
+            JOptionPane.ERROR_MESSAGE);
+            
+    } catch (SQLException e) {
+        // Captura específica para errores de base de datos
+        JOptionPane.showMessageDialog(this, 
+            "Error de base de datos: " + e.getMessage(), 
+            "Error técnico", 
+            JOptionPane.ERROR_MESSAGE);
+    } catch (Exception e) {
+        // Captura genérica para otros errores inesperados
+        JOptionPane.showMessageDialog(this, 
+            "Error inesperado: " + e.getMessage(), 
+            "Error", 
+            JOptionPane.ERROR_MESSAGE);
     }
-
     
-    Pin objPin = new Pin(usuario, nuevoPin);
-    int resultado = objPin.actualizarPin();
+    
+    
 
-    if (resultado > 0) {
-        JOptionPane.showMessageDialog(this, "PIN actualizado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-    } else {
-        JOptionPane.showMessageDialog(this, "Error al actualizar el PIN. Asegúrate de que el usuario existe en la BD.", "Error", JOptionPane.ERROR_MESSAGE);
-    }
     }//GEN-LAST:event_btn_cambiopinActionPerformed
+    private void registrarCambioPin(String idCliente) {
+        Conexion conexion = new Conexion();
+    if (conexion.abrir_conexion()) {
+        try {
+            String query = "INSERT INTO auditoria_pines (id_cliente) VALUES (?)";
+            PreparedStatement stmt = conexion.prepararStatement(query);
+            stmt.setString(1, idCliente);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.err.println("Error al registrar auditoría: " + e.getMessage());
+        } finally {
+            conexion.cerrar_conexion();
+        }
+    }
+    }
+
 
     private void btn_regresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_regresarActionPerformed
-       SesionUsuario.setUsuarioActual(null);
-       
-       this.dispose();
-       
-       frm_inicio inicio =new frm_inicio();
-      inicio.setVisible(true);
-       
-       
-        
-        
-        
+
+        this.dispose();
+        new frm_menu().setVisible(true);
+
+
     }//GEN-LAST:event_btn_regresarActionPerformed
 
     /**

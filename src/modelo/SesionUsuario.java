@@ -10,13 +10,17 @@ package modelo;
  */
 public class SesionUsuario {
     
-     private static String usuarioActual;
-
-    public static void setUsuarioActual(String usuario) {
-        usuarioActual = usuario;
+    private static Cliente clienteActual;
+    
+    public static void setClienteActual(Cliente cliente) {
+        clienteActual = cliente;
     }
-
-    public static String getUsuarioActual() {
-        return usuarioActual;
+    
+    public static Cliente getClienteActual() {
+        return clienteActual;
+    }
+    
+    public static void cerrarSesion() {
+        clienteActual = null;
     }
 }

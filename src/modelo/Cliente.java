@@ -9,26 +9,27 @@ package modelo;
  * @author Diego
  */
 public class Cliente {
-    private int id;
+    private String idCliente;  // Cambiado a String para coincidir con la BD
     private String nombre;
     private double saldo;
-    private int pin;
+    private String pinHash;    // Cambiado a String para almacenar el hash
     
-    public Cliente (){}
+    public Cliente(){}
 
-    public Cliente(int id, String nombre, double saldo, int pin) {
-        this.id = id;
+    public Cliente(String idCliente, String nombre, double saldo, String pinHash) {
+        this.idCliente = idCliente;
         this.nombre = nombre;
         this.saldo = saldo;
-        this.pin = pin;
+        this.pinHash = pinHash;
     }
 
-    public int getId() {
-        return id;
+    // Getters y Setters actualizados
+    public String getIdCliente() {
+        return idCliente;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setIdCliente(String idCliente) {
+        this.idCliente = idCliente;
     }
 
     public String getNombre() {
@@ -47,14 +48,11 @@ public class Cliente {
         this.saldo = saldo;
     }
 
-    public int getPin() {
-        return pin;
+    public String getPinHash() {
+        return pinHash;
     }
 
-    public void setPin(int pin) {
-        this.pin = pin;
+    public void setPinHash(String pinHash) {
+        this.pinHash = pinHash;
     }
-    
-    
-
 }

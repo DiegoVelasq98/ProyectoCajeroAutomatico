@@ -5,16 +5,16 @@
 package vista;
 
 import javax.swing.JFrame;
+import modelo.Cliente;
 import modelo.SesionUsuario;
 public class BaseForm extends JFrame {
-    protected String usuarioActual;  // Variable protegida que se accederá en los formularios
+     protected Cliente clienteActual;    // Variable protegida que se accederá en los formularios
 
     /**
      * Creates new form BaseForm
      */
     public BaseForm() {
-                this.usuarioActual = SesionUsuario.getUsuarioActual();
-
+        this.clienteActual = SesionUsuario.getClienteActual();  // Ahora obtiene el objeto Cliente
         initComponents();
     }
 

@@ -7,50 +7,49 @@ package modelo;
 import java.sql.*;
 import javax.swing.JOptionPane;
 
+
 public class Conexion {
-    
-    
+ public Connection conexion_bd;
 
-public Connection conexion_bd;
+    // Datos de conexión para Oracle
+    private final String host = "localhost"; // o la IP del servidor Oracle
+    private final String puerto = "1521"; // Puerto por defecto de Oracle
+    private final String sid = "xe"; // Nombre del SID de tu instancia Oracle
+    private final String urlConexion = String.format("jdbc:oracle:thin:@%s:%s:%s", host, puerto, sid); 
+    private final String usuario = "vicquino";
+    private final String password = "vicquino";
+    private final String jdbc = "oracle.jdbc.OracleDriver";
 
-//datos de conexion a la base de datos puede ser Workbench u Oracle
-private final String puerto=" 3306";
-private final String bd="db_cajero";
-private final String urlConexion= String.format("jdbc:mysql://localhost:%s/%s?serverTimezone=UTC", puerto, bd); 
-private final String usuario= "root";
-private final String password="diego1234";
-private final String jdbc = "com.mysql.cj.jdbc.Driver";
-
-
-
-//metodo para abrir la conexion a la bd
-
- public boolean abrir_conexion() {
+    // Método para abrir la conexión a la bd
+    public boolean abrir_conexion() {
         try {
             Class.forName(jdbc);
             conexion_bd = DriverManager.getConnection(urlConexion, usuario, password);
-            System.out.println("Conexión exitosa");
+            System.out.println("Conexión exitosa a Oracle");
             return true;
         } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("Error al conectar: " + ex.getMessage());
+            System.out.println("Error al conectar a Oracle: " + ex.getMessage());
             return false;
         }
     }
 
-//metodo para cerrar la conexiones
-
-public void cerrar_conexion(){
-    
-    try{
-        if (conexion_bd!=null && !conexion_bd.isClosed()){
-            conexion_bd.close();
-            System.out.println("Conexion cerrada");
+    // Método para cerrar la conexiones
+    public void cerrar_conexion() {
+        try {
+            if (conexion_bd != null && !conexion_bd.isClosed()) {
+                conexion_bd.close();
+                System.out.println("Conexion cerrada");
+            }
+        } catch (SQLException ex) {
+            System.out.println("Error al cerrar la conexion: " + ex.getMessage());
         }
-    }catch(SQLException ex){
-        System.out.println("Error al cerrar la conexion"+ ex.getMessage());
-        
     }
-}
-
+    
+    public PreparedStatement prepararStatement(String sql) throws SQLException {
+        if (conexion_bd == null || conexion_bd.isClosed()) {
+            throw new SQLException("Conexión no establecida");
+        }
+        return conexion_bd.prepareStatement(sql);
+    }
 }
 
