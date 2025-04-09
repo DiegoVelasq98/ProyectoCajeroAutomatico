@@ -28,7 +28,7 @@ public class frm_transferencia extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         btn_cancelar = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
+        btn_confirmar = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
         lbl_cuenta = new javax.swing.JLabel();
         lbl_monto = new javax.swing.JLabel();
@@ -37,7 +37,9 @@ public class frm_transferencia extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        btn_cancelar.setForeground(new java.awt.Color(255, 255, 255));
+        btn_cancelar.setBackground(new java.awt.Color(255, 0, 51));
+        btn_cancelar.setFont(new java.awt.Font("Ubuntu Mono", 1, 24)); // NOI18N
+        btn_cancelar.setForeground(new java.awt.Color(0, 0, 0));
         btn_cancelar.setText("Cancelar");
         btn_cancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -45,11 +47,13 @@ public class frm_transferencia extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setForeground(new java.awt.Color(255, 255, 255));
-        jButton2.setText("Confirmar");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btn_confirmar.setBackground(new java.awt.Color(0, 255, 51));
+        btn_confirmar.setFont(new java.awt.Font("Ubuntu Mono", 1, 24)); // NOI18N
+        btn_confirmar.setForeground(new java.awt.Color(0, 0, 0));
+        btn_confirmar.setText("Confirmar");
+        btn_confirmar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btn_confirmarActionPerformed(evt);
             }
         });
 
@@ -106,27 +110,26 @@ public class frm_transferencia extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(98, 98, 98)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(190, 190, 190)
-                        .addComponent(jButton2)
-                        .addGap(73, 73, 73)
-                        .addComponent(btn_cancelar)))
-                .addContainerGap(114, Short.MAX_VALUE))
+                .addGap(168, 168, 168)
+                .addComponent(btn_confirmar)
+                .addGap(55, 55, 55)
+                .addComponent(btn_cancelar)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(114, Short.MAX_VALUE)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(98, 98, 98))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(56, Short.MAX_VALUE)
+                .addContainerGap(53, Short.MAX_VALUE)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton2)
+                    .addComponent(btn_confirmar)
                     .addComponent(btn_cancelar))
-                .addGap(33, 33, 33))
+                .addGap(21, 21, 21))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -143,9 +146,9 @@ public class frm_transferencia extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btn_confirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_confirmarActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btn_confirmarActionPerformed
 
     private void txt_cuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_cuentaActionPerformed
         // TODO add your handling code here:
@@ -153,6 +156,8 @@ public class frm_transferencia extends javax.swing.JFrame {
 
     private void btn_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelarActionPerformed
         // TODO add your handling code here:
+        this.dispose();
+        new frm_menu().setVisible(true);
     }//GEN-LAST:event_btn_cancelarActionPerformed
 
     /**
@@ -192,7 +197,7 @@ public class frm_transferencia extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_cancelar;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JButton btn_confirmar;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lbl_cuenta;

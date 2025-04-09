@@ -18,15 +18,15 @@ public class frm_menu extends BaseForm {
      */
     public frm_menu() {
         initComponents();
-        
+
         if (this.clienteActual != null) {
             lbl_usuario.setText("Sesión de: " + this.clienteActual.getNombre());
         } else {
             lbl_usuario.setText("No hay sesión activa");
-            JOptionPane.showMessageDialog(this, 
-                "No se encontró sesión activa", 
-                "Error", 
-                JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "No se encontró sesión activa",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
             this.dispose();
             new frm_inicio().setVisible(true);
         }
@@ -249,18 +249,21 @@ public class frm_menu extends BaseForm {
     }//GEN-LAST:event_btn_consultaActionPerformed
 
     private void btn_cambiopinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cambiopinActionPerformed
-  frm_cambiopin fr= new frm_cambiopin();
-        fr.setVisible (true);
+        frm_cambiopin fr = new frm_cambiopin();
+        fr.setVisible(true);
         dispose();    }//GEN-LAST:event_btn_cambiopinActionPerformed
 
     private void btn_transferenciasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_transferenciasActionPerformed
         // TODO add your handling code here:
+        frm_transferencia fr=new frm_transferencia();
+        fr.setVisible(true);
+        dispose();
     }//GEN-LAST:event_btn_transferenciasActionPerformed
 
     private void btn_prestamoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_prestamoActionPerformed
-frm_prestamos fr= new frm_prestamos();
-        fr.setVisible (true);
-        dispose();    
+        frm_prestamos fr = new frm_prestamos();
+        fr.setVisible(true);
+        dispose();
     }//GEN-LAST:event_btn_prestamoActionPerformed
 
     /**

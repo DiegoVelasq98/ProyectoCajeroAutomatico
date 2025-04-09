@@ -14,28 +14,12 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 public class Pin {
-        private String idCliente;
-    private String pinHash;
+    private String idCliente;
+    private String pin;
     
     public Pin(String idCliente, String pin) {
         this.idCliente = idCliente;
-        this.pinHash = generarHash(pin);
-    }
-    
-    private String generarHash(String pin) {
-        try {
-            MessageDigest digest = MessageDigest.getInstance("SHA-256");
-            byte[] hash = digest.digest(pin.getBytes(StandardCharsets.UTF_8));
-            StringBuilder hexString = new StringBuilder();
-            for (byte b : hash) {
-                String hex = Integer.toHexString(0xff & b);
-                if (hex.length() == 1) hexString.append('0');
-                hexString.append(hex);
-            }
-            return hexString.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException("Error al generar hash", e);
-        }
+        this.pin = pin;
     }
     
     public int actualizarPin() throws SQLException {
@@ -45,9 +29,9 @@ public class Pin {
         }
         
         try {
-            String query = "UPDATE cliente SET pin_hash = ? WHERE id_cliente = ?";
+            String query = "UPDATE cliente SET pin = ? WHERE id_cliente = ?";
             PreparedStatement stmt = conexion.prepararStatement(query);
-            stmt.setString(1, this.pinHash);
+            stmt.setString(1, this.pin);
             stmt.setString(2, this.idCliente);
             
             return stmt.executeUpdate();
@@ -55,10 +39,4 @@ public class Pin {
             conexion.cerrar_conexion();
         }
     }
-
-    
-       
-    
-    
-            
 }

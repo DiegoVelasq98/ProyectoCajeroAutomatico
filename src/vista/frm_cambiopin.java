@@ -8,6 +8,11 @@ import javax.swing.JOptionPane;
 import modelo.Conexion;
 import modelo.Pin;
 import java.sql.*;  
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
+import javax.swing.text.DocumentFilter.FilterBypass;
 import modelo.BancoException;
 import modelo.SesionUsuario;
 
@@ -22,7 +27,7 @@ public class frm_cambiopin extends BaseForm {
      */
     public frm_cambiopin() {
       initComponents(); // Primero inicializa los componentes
-    
+    ((AbstractDocument) txt_pin.getDocument()).setDocumentFilter(new FiltroNumerico4Digitos());
     // Luego realiza las operaciones con los componentes
     if (this.clienteActual != null) {
         lbl_usuario.setText("Sesión de: " + clienteActual.getNombre());
@@ -374,7 +379,7 @@ public class frm_cambiopin extends BaseForm {
         Conexion conexion = new Conexion();
     if (conexion.abrir_conexion()) {
         try {
-            String query = "INSERT INTO auditoria_pines (id_cliente) VALUES (?)";
+            String query = "UPDATE cliente SET pin = ? WHERE id_cliente = ?";
             PreparedStatement stmt = conexion.prepararStatement(query);
             stmt.setString(1, idCliente);
             stmt.executeUpdate();
@@ -429,6 +434,26 @@ public class frm_cambiopin extends BaseForm {
             }
         });
     }
+    class FiltroNumerico4Digitos extends DocumentFilter {
+    @Override
+    public void insertString(FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+        if (string == null) return;
+        if (esNumerico(string) && (fb.getDocument().getLength() + string.length()) <= 4) {
+            super.insertString(fb, offset, string, attr);
+        }
+    }
+
+    public void replace(FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+        if (text == null) return;
+        if (esNumerico(text) && (fb.getDocument().getLength() - length + text.length()) <= 4) {
+            super.replace(fb, offset, length, text, attrs);
+        }
+    }
+
+    private boolean esNumerico(String texto) {
+        return texto.matches("\\d+");
+    }
+}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_0;

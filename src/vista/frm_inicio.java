@@ -3,11 +3,17 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package vista;
+
 import java.sql.*;
 import javax.swing.JOptionPane;
+import javax.swing.text.AbstractDocument;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.DocumentFilter;
 import modelo.Cliente;
 import modelo.Conexion;
 import modelo.SesionUsuario;
+
 /**
  *
  * @author Diego
@@ -19,6 +25,7 @@ public class frm_inicio extends BaseForm {
      */
     public frm_inicio() {
         initComponents();
+    ((AbstractDocument) txt_pass.getDocument()).setDocumentFilter(new FiltroNumerico4Digitos());
     }
 
     /**
@@ -300,7 +307,7 @@ public class frm_inicio extends BaseForm {
         txt_pass.setText(txt_pass.getText() + "1");    }//GEN-LAST:event_btn_1ActionPerformed
 
     private void btn_2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_2ActionPerformed
-         txt_pass.setText(txt_pass.getText() + "2");
+        txt_pass.setText(txt_pass.getText() + "2");
     }//GEN-LAST:event_btn_2ActionPerformed
 
     private void btn_4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_4ActionPerformed
@@ -308,72 +315,73 @@ public class frm_inicio extends BaseForm {
 
     private void btn_pinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_pinActionPerformed
         String idClienteIngresado = txt_usuario.getText().trim().toUpperCase();
-    String pinIngresado = txt_pass.getText();
+        String pinIngresado = txt_pass.getText();
 
-    // Validaciones básicas
-    if (idClienteIngresado.isEmpty() || pinIngresado.isEmpty()) {
-        JOptionPane.showMessageDialog(this, 
-                "Debe ingresar el ID de cliente y el PIN.",
-                "Campos vacíos",
-                JOptionPane.WARNING_MESSAGE);
-        return;
-    }
-
-    Conexion conexion = new Conexion();
-
-    if (conexion.abrir_conexion()) {
-        try {
-            // Consulta sin usar hash, validando directamente el PIN (no recomendado en producción)
-            String authQuery = "SELECT nombre_cliente FROM cliente WHERE id_cliente = ? AND pin = ?";
-            PreparedStatement authStmt = conexion.conexion_bd.prepareStatement(authQuery);
-            authStmt.setString(1, idClienteIngresado);
-            authStmt.setString(2, pinIngresado);
-
-            ResultSet authResult = authStmt.executeQuery();
-
-            if (authResult.next()) {
-                // Autenticación exitosa
-                String nombreCliente = authResult.getString("nombre_cliente");
-
-                Cliente cliente = new Cliente();
-                cliente.setIdCliente(idClienteIngresado);
-                cliente.setNombre(nombreCliente);
-
-                // Guardar cliente en sesión
-                SesionUsuario.setClienteActual(cliente);
-
-                JOptionPane.showMessageDialog(this, 
-                        "Bienvenido, " + nombreCliente,
-                        "Acceso permitido",
-                        JOptionPane.INFORMATION_MESSAGE);
-
-                frm_menu menu = new frm_menu();
-                menu.setVisible(true);
-                this.dispose();
-            } else {
-                JOptionPane.showMessageDialog(this, 
-                        "ID o PIN incorrecto. Intente de nuevo.",
-                        "Acceso denegado",
-                        JOptionPane.ERROR_MESSAGE);
-            }
-
-            authResult.close();
-            authStmt.close();
-
-        } catch (SQLException e) {
+        // Validaciones básicas
+        if (idClienteIngresado.isEmpty() || pinIngresado.isEmpty()) {
             JOptionPane.showMessageDialog(this,
-                    "Error al autenticar: " + e.getMessage(),
-                    "Error en base de datos",
-                    JOptionPane.ERROR_MESSAGE);
-        } finally {
-            conexion.cerrar_conexion();
+                    "Debe ingresar el ID de cliente y el PIN.",
+                    "Campos vacíos",
+                    JOptionPane.WARNING_MESSAGE);
+            return;
         }
-    } else {
-        JOptionPane.showMessageDialog(this,
-                "No se pudo conectar a la base de datos.",
-                "Error de conexión",
-                JOptionPane.ERROR_MESSAGE);
-    }
+
+        Conexion conexion = new Conexion();
+
+        if (conexion.abrir_conexion()) {
+            try {
+                // Consulta sin usar hash, validando directamente el PIN (no recomendado en producción)
+                String authQuery = "SELECT nombre_cliente FROM cliente WHERE id_cliente = ? AND pin = ?";
+                PreparedStatement authStmt = conexion.conexion_bd.prepareStatement(authQuery);
+                authStmt.setString(1, idClienteIngresado);
+                authStmt.setString(2, pinIngresado);
+
+                ResultSet authResult = authStmt.executeQuery();
+
+                if (authResult.next()) {
+                    // Autenticación exitosa
+                    String nombreCliente = authResult.getString("nombre_cliente");
+
+                    Cliente cliente = new Cliente();
+                    cliente.setIdCliente(idClienteIngresado);
+                    cliente.setNombre(nombreCliente);
+
+                    // Guardar cliente en sesión
+                    SesionUsuario.setClienteActual(cliente);
+
+                    JOptionPane.showMessageDialog(this,
+                            "Bienvenido, " + nombreCliente,
+                            "Acceso permitido",
+                            JOptionPane.INFORMATION_MESSAGE);
+
+                    frm_menu menu = new frm_menu();
+                    menu.setVisible(true);
+                    this.dispose();
+                } else {
+                    JOptionPane.showMessageDialog(this,
+                            "ID o PIN incorrecto. Intente de nuevo.",
+                            "Acceso denegado",
+                            JOptionPane.ERROR_MESSAGE);
+                }
+
+                authResult.close();
+                authStmt.close();
+
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this,
+                        "Error al autenticar: " + e.getMessage(),
+                        "Error en base de datos",
+                        JOptionPane.ERROR_MESSAGE);
+            } finally {
+                conexion.cerrar_conexion();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "No se pudo conectar a la base de datos.",
+                    "Error de conexión",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+
         
             }//GEN-LAST:event_btn_pinActionPerformed
 
@@ -401,8 +409,8 @@ public class frm_inicio extends BaseForm {
     private void btn_borrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_borrarActionPerformed
 
         String currentText = txt_pass.getText();
-        if (currentText.length()>0){
-            txt_pass.setText(currentText.substring(0, currentText.length()-1));
+        if (currentText.length() > 0) {
+            txt_pass.setText(currentText.substring(0, currentText.length() - 1));
         }
 
     }//GEN-LAST:event_btn_borrarActionPerformed
@@ -450,6 +458,33 @@ public class frm_inicio extends BaseForm {
             }
         });
     }
+    
+    class FiltroNumerico4Digitos extends DocumentFilter {
+
+            @Override
+            public void insertString(DocumentFilter.FilterBypass fb, int offset, String string, AttributeSet attr) throws BadLocationException {
+                if (string == null) {
+                    return;
+                }
+                if (esNumerico(string) && (fb.getDocument().getLength() + string.length()) <= 4) {
+                    super.insertString(fb, offset, string, attr);
+                }
+            }
+
+            @Override
+            public void replace(DocumentFilter.FilterBypass fb, int offset, int length, String text, AttributeSet attrs) throws BadLocationException {
+                if (text == null) {
+                    return;
+                }
+                if (esNumerico(text) && (fb.getDocument().getLength() - length + text.length()) <= 4) {
+                    super.replace(fb, offset, length, text, attrs);
+                }
+            }
+
+            private boolean esNumerico(String texto) {
+                return texto.matches("\\d+");
+            }
+        }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn_0;
