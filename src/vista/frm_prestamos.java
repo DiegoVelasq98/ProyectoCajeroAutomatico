@@ -61,6 +61,14 @@ public class frm_prestamos extends javax.swing.JFrame {
 
         jLabel6.setText("Total");
 
+        txt_interes.setEditable(false);
+        txt_interes.setText("20%");
+        txt_interes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_interesActionPerformed(evt);
+            }
+        });
+
         btn_calcular.setText("Calcular");
         btn_calcular.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -76,6 +84,11 @@ public class frm_prestamos extends javax.swing.JFrame {
         });
 
         btn_atras.setText("Atrás");
+        btn_atras.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_atrasActionPerformed(evt);
+            }
+        });
 
         lbl_plazo.setText("Plazo (Se realiza max 12 meses)");
 
@@ -120,15 +133,15 @@ public class frm_prestamos extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btn_calcular, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn_reiniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(96, 96, 96))
+                        .addComponent(btn_aceptarPrestamo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(50, 50, 50))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(btn_proyeccion)
-                            .addComponent(btn_aceptarPrestamo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(43, 43, 43))))
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(btn_calcular, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btn_reiniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(37, 37, 37))))
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
@@ -168,16 +181,16 @@ public class frm_prestamos extends javax.swing.JFrame {
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lbl_couta)
                                     .addComponent(txt_cuota, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(50, 70, Short.MAX_VALUE))
+                                .addGap(50, 76, Short.MAX_VALUE))
                             .addGroup(jPanel1Layout.createSequentialGroup()
                                 .addGap(55, 55, 55)
                                 .addComponent(btn_reiniciar)
-                                .addGap(63, 63, 63)
+                                .addGap(56, 56, 56)
                                 .addComponent(btn_proyeccion)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(btn_aceptarPrestamo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addContainerGap(344, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txt_total, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING))))
@@ -206,27 +219,32 @@ public class frm_prestamos extends javax.swing.JFrame {
 
     private void btn_calcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_calcularActionPerformed
       
-         try {
-        double monto = Double.parseDouble(txt_monto.getText());
-        double interes = Double.parseDouble(txt_interes.getText());
-        int plazo = Integer.parseInt(txt_plazo.getText());
+      
+        
+        try {
+    double monto = Double.parseDouble(txt_monto.getText());
+    int plazo = Integer.parseInt(txt_plazo.getText());
 
-        if (plazo > 12 || plazo <= 0) {
-            JOptionPane.showMessageDialog(this, "El plazo debe estar entre 1 y 12 meses.");
-            return;
-        }
-
-        Prestamos prestamos = new Prestamos(monto, interes, plazo);
-
-        double cuota = prestamos.calcularCuota();
-        double total = prestamos.calcularTotal();
-
-        txt_cuota.setText(String.format("%.2f", cuota));
-        txt_total.setText(String.format("%.2f", total));
-
-    } catch (NumberFormatException e) {
-        JOptionPane.showMessageDialog(this, "Por favor, ingresa valores numéricos válidos.");
+    if (plazo > 12 || plazo <= 0) {
+        JOptionPane.showMessageDialog(this, "El plazo debe estar entre 1 y 12 meses.");
+        return;
     }
+
+    double interes = 0.20; 
+
+    
+    Prestamos prestamos = new Prestamos(monto, plazo);
+
+    double cuota = prestamos.calcularCuota();
+    double total = prestamos.calcularTotal();
+
+    txt_cuota.setText(String.format("%.2f", cuota));
+    txt_total.setText(String.format("%.2f", total));
+
+} catch (NumberFormatException e) {
+    JOptionPane.showMessageDialog(this, "Por favor, ingresa valores numéricos válidos.");
+}
+
         
         
     }//GEN-LAST:event_btn_calcularActionPerformed
@@ -234,7 +252,6 @@ public class frm_prestamos extends javax.swing.JFrame {
     private void btn_reiniciarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_reiniciarActionPerformed
 
     txt_monto.setText("");
-    txt_interes.setText("");
     txt_plazo.setText("");
     txt_cuota.setText("");  
     txt_total.setText(""); 
@@ -243,7 +260,7 @@ public class frm_prestamos extends javax.swing.JFrame {
     private void btn_proyeccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_proyeccionActionPerformed
     try {
         double monto = Double.parseDouble(txt_monto.getText());
-        double interes = Double.parseDouble(txt_interes.getText());
+        double interes = 0.20; 
         int plazo = Integer.parseInt(txt_plazo.getText());
 
         if (plazo > 12 || plazo <= 0) {
@@ -251,7 +268,7 @@ public class frm_prestamos extends javax.swing.JFrame {
             return;
         }
 
-        Prestamos prestamos = new Prestamos(monto, interes, plazo);
+        Prestamos prestamos = new Prestamos(monto, plazo);
 
         double cuota = prestamos.calcularCuota();
         double total = prestamos.calcularTotal();
@@ -259,7 +276,7 @@ public class frm_prestamos extends javax.swing.JFrame {
         StringBuilder proyeccion = new StringBuilder();
         proyeccion.append("🧾 Proyección de cuotas:\n\n");
         proyeccion.append(String.format("Monto: Q%.2f\n", monto));
-        proyeccion.append(String.format("Interés: %.2f%%\n", interes));
+        proyeccion.append(String.format("Interés: %.2f%%\n", interes * 100)); 
         proyeccion.append(String.format("Plazo: %d meses\n\n", plazo));
         proyeccion.append("Cuotas:\n");
 
@@ -277,6 +294,21 @@ public class frm_prestamos extends javax.swing.JFrame {
 
 
     }//GEN-LAST:event_btn_proyeccionActionPerformed
+
+    private void txt_interesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_interesActionPerformed
+       
+        txt_interes.setText("20%");
+txt_interes.setEditable(false);
+
+    }//GEN-LAST:event_txt_interesActionPerformed
+
+    private void btn_atrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_atrasActionPerformed
+        
+         frm_menu fr = new frm_menu();
+        fr.setVisible(true);
+        dispose();
+        
+    }//GEN-LAST:event_btn_atrasActionPerformed
 
     /**
      * @param args the command line arguments

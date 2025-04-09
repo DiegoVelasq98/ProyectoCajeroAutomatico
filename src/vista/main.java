@@ -7,6 +7,7 @@ package vista;
 import javax.swing.JOptionPane;
 import modelo.Conexion;
 
+
 /**
  *
  * @author Diego
@@ -28,6 +29,12 @@ public class main {
     } else {
         JOptionPane.showMessageDialog(null, "No se pudo conectar a Oracle. Verifique la configuración.", "Error", JOptionPane.ERROR_MESSAGE);
     }
+    
+   
+   
+  /* frm_prestamos fr = new frm_prestamos();
+        fr.setVisible(true);
+*/
 }
     
 }
