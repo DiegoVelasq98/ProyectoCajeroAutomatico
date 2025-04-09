@@ -157,6 +157,11 @@ public class frm_menu extends BaseForm {
         });
 
         btn_retiros.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 4));
+        btn_retiros.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_retirosActionPerformed(evt);
+            }
+        });
 
         btn_prestamo.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 4));
         btn_prestamo.addActionListener(new java.awt.event.ActionListener() {
@@ -246,6 +251,9 @@ public class frm_menu extends BaseForm {
 
     private void btn_consultaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_consultaActionPerformed
         // TODO add your handling code here:
+        frm_consulta fr=new frm_consulta();
+        fr.setVisible(true);
+        dispose();
     }//GEN-LAST:event_btn_consultaActionPerformed
 
     private void btn_cambiopinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cambiopinActionPerformed
@@ -265,6 +273,12 @@ public class frm_menu extends BaseForm {
         fr.setVisible(true);
         dispose();
     }//GEN-LAST:event_btn_prestamoActionPerformed
+
+    private void btn_retirosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_retirosActionPerformed
+        // TODO add your handling code here:
+        frm_retiro fr=new frm_retiro();
+        fr.setVisible(true);
+    }//GEN-LAST:event_btn_retirosActionPerformed
 
     /**
      * @param args the command line arguments
