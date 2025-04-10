@@ -32,9 +32,8 @@ public class main {
     
    
    
-  /* frm_prestamos fr = new frm_prestamos();
-        fr.setVisible(true);
-*/
+   //frm_menu_Consulta fr = new frm_menu_Consulta();
+        //fr.setVisible(true);
 }
     
 }

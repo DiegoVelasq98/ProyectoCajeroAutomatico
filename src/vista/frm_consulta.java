@@ -6,7 +6,11 @@ package vista;
 
 import vista.frm_menu;
 import vista.frm_menu_Consulta;
-
+import java.sql.*; 
+import javax.swing.JOptionPane;
+import modelo.Cliente;
+import modelo.Conexion;
+import modelo.SesionUsuario;
 /**
  *
  * @author Diego
@@ -41,7 +45,7 @@ public class frm_consulta extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         Regresar = new javax.swing.JToggleButton();
         ConsultarSaldo = new javax.swing.JToggleButton();
-        jToggleButton3 = new javax.swing.JToggleButton();
+        btn_consultar_prestamo = new javax.swing.JToggleButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -128,6 +132,12 @@ public class frm_consulta extends javax.swing.JFrame {
             }
         });
 
+        btn_consultar_prestamo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_consultar_prestamoActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -145,7 +155,7 @@ public class frm_consulta extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btn_consultar_prestamo, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(20, 20, 20))))
         );
         layout.setVerticalGroup(
@@ -161,7 +171,7 @@ public class frm_consulta extends javax.swing.JFrame {
                                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGap(37, 37, 37)
-                                .addComponent(jToggleButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addComponent(btn_consultar_prestamo, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(105, 105, 105)
                         .addComponent(ConsultarSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -185,11 +195,93 @@ public class frm_consulta extends javax.swing.JFrame {
 
     private void ConsultarSaldoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ConsultarSaldoActionPerformed
         
-        frm_menu_Consulta fr= new frm_menu_Consulta();
-        fr.setVisible (true);
-        dispose(); 
-        // TODO add your handling code here:
+        
+        
+         // Obtener el cliente actual desde la sesión
+    Cliente clienteActual = SesionUsuario.getClienteActual();
+    
+    if (clienteActual != null) {
+        // Obtener el ID del cliente
+        String idCliente = clienteActual.getIdCliente();
+        
+        // Realizar consulta para obtener el saldo de la cuenta (suponiendo que ya tienes la conexión abierta)
+        Conexion conexion = new Conexion();
+        Double saldo = 0.0;
+        
+        if (conexion.abrir_conexion()) {
+            try {
+                String query = "SELECT saldo FROM cuenta WHERE id_cliente = ?";
+                PreparedStatement stmt = conexion.conexion_bd.prepareStatement(query);
+                stmt.setString(1, idCliente);
+                
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    saldo = rs.getDouble("saldo");
+                }
+                
+                rs.close();
+                stmt.close();
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Error al consultar saldo: " + e.getMessage());
+            } finally {
+                conexion.cerrar_conexion();
+            }
+        }
+        
+        // Crear y mostrar el formulario de consulta de saldo
+        frm_menu_Consulta fr = new frm_menu_Consulta();
+        fr.mostrarSaldo(saldo);  // Pasar el saldo al formulario
+        fr.setVisible(true);
+        dispose();  // Cerrar el formulario actual
+    } else {
+        JOptionPane.showMessageDialog(this, "No se ha iniciado sesión.");
+    }
     }//GEN-LAST:event_ConsultarSaldoActionPerformed
+
+    private void btn_consultar_prestamoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_consultar_prestamoActionPerformed
+// Obtener el cliente actual desde la sesión (como antes)
+    Cliente clienteActual = SesionUsuario.getClienteActual();
+
+    if (clienteActual != null) {
+        // Obtener el ID del cliente
+        String idCliente = clienteActual.getIdCliente();
+
+        // Realizar consulta para obtener el saldo del préstamo
+        Conexion conexion = new Conexion();
+        Double saldoPrestamo = 0.0;
+
+        if (conexion.abrir_conexion()) {
+            try {
+                String query = "SELECT monto FROM prestamo WHERE id_cliente = ?";
+                PreparedStatement stmt = conexion.conexion_bd.prepareStatement(query);
+                stmt.setString(1, idCliente);
+
+                ResultSet rs = stmt.executeQuery();
+                if (rs.next()) {
+                    saldoPrestamo = rs.getDouble("monto");
+                }
+
+                rs.close();
+                stmt.close();
+            } catch (SQLException e) {
+                JOptionPane.showMessageDialog(this, "Error al consultar saldo del préstamo: " + e.getMessage());
+            } finally {
+                conexion.cerrar_conexion();
+            }
+        }
+
+        // Crear y mostrar el formulario de consulta de saldo del préstamo
+        frm_menu_prestamo fr = new frm_menu_prestamo();  // Crear instancia del formulario
+        fr.mostrarSaldoPrestamo(saldoPrestamo);  // Pasar el saldo del préstamo
+        fr.setVisible(true);  // Mostrar el formulario
+        dispose();  // Cerrar el formulario actual
+    } else {
+        JOptionPane.showMessageDialog(this, "No se ha iniciado sesión.");
+    }
+        
+        
+        
+        dispose();     }//GEN-LAST:event_btn_consultar_prestamoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -232,6 +324,7 @@ public class frm_consulta extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JToggleButton ConsultarSaldo;
     private javax.swing.JToggleButton Regresar;
+    private javax.swing.JToggleButton btn_consultar_prestamo;
     private javax.swing.JColorChooser jColorChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -242,6 +335,5 @@ public class frm_consulta extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JToggleButton jToggleButton3;
     // End of variables declaration//GEN-END:variables
 }

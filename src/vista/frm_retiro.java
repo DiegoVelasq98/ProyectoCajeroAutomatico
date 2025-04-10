@@ -262,6 +262,7 @@ public class frm_retiro extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void retiro300ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retiro300ActionPerformed

@@ -5,7 +5,9 @@
 package vista;
 
 import javax.swing.JOptionPane;
+import modelo.Cliente;
 import modelo.Prestamos;
+import modelo.SesionUsuario;
 
 /**
  *
@@ -55,10 +57,13 @@ public class frm_prestamos extends javax.swing.JFrame {
         lbl_interes.setFont(new java.awt.Font("Ubuntu Mono", 1, 14)); // NOI18N
         lbl_interes.setText("Interes");
 
+        lbl_monto.setFont(new java.awt.Font("Ubuntu Mono", 1, 14)); // NOI18N
         lbl_monto.setText("Monto");
 
+        lbl_couta.setFont(new java.awt.Font("Ubuntu Mono", 1, 14)); // NOI18N
         lbl_couta.setText("Cuota mensual");
 
+        jLabel6.setFont(new java.awt.Font("Ubuntu Mono", 1, 14)); // NOI18N
         jLabel6.setText("Total");
 
         txt_interes.setEditable(false);
@@ -66,6 +71,12 @@ public class frm_prestamos extends javax.swing.JFrame {
         txt_interes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_interesActionPerformed(evt);
+            }
+        });
+
+        txt_plazo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_plazoActionPerformed(evt);
             }
         });
 
@@ -90,6 +101,7 @@ public class frm_prestamos extends javax.swing.JFrame {
             }
         });
 
+        lbl_plazo.setFont(new java.awt.Font("Ubuntu Mono", 1, 14)); // NOI18N
         lbl_plazo.setText("Plazo (Se realiza max 12 meses)");
 
         txt_cuota.setBorder(javax.swing.BorderFactory.createEtchedBorder());
@@ -97,8 +109,13 @@ public class frm_prestamos extends javax.swing.JFrame {
         txt_total.setBorder(javax.swing.BorderFactory.createEtchedBorder());
 
         btn_aceptarPrestamo.setBackground(new java.awt.Color(102, 255, 51));
-        btn_aceptarPrestamo.setFont(new java.awt.Font("Ubuntu Mono", 1, 14)); // NOI18N
+        btn_aceptarPrestamo.setFont(new java.awt.Font("Ubuntu Mono", 1, 18)); // NOI18N
         btn_aceptarPrestamo.setLabel("Aceptar Préstamo");
+        btn_aceptarPrestamo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btn_aceptarPrestamoActionPerformed(evt);
+            }
+        });
 
         btn_proyeccion.setText("Proyeccion de Cuotas");
         btn_proyeccion.addActionListener(new java.awt.event.ActionListener() {
@@ -112,105 +129,94 @@ public class frm_prestamos extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lbl_interes, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbl_monto, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lbl_plazo)
-                            .addComponent(lbl_couta, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 112, Short.MAX_VALUE)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txt_interes, javax.swing.GroupLayout.DEFAULT_SIZE, 71, Short.MAX_VALUE)
-                            .addComponent(txt_monto)
-                            .addComponent(txt_plazo)
-                            .addComponent(txt_cuota, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(28, 28, 28)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addComponent(btn_aceptarPrestamo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(50, 50, 50))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btn_proyeccion)
-                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(btn_calcular, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(btn_reiniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(37, 37, 37))))
+                    .addComponent(lbl_couta, javax.swing.GroupLayout.PREFERRED_SIZE, 191, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_plazo)
+                    .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_monto, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_interes, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, Short.MAX_VALUE))
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(txt_monto, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                        .addGap(157, 157, 157)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txt_interes, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_cuota, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txt_plazo, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(btn_atras)
+                    .addComponent(btn_calcular, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(174, 174, 174)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 289, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(btn_atras)))
-                .addContainerGap(140, Short.MAX_VALUE))
+                        .addGap(44, 44, 44)
+                        .addComponent(btn_proyeccion)
+                        .addGap(41, 41, 41)
+                        .addComponent(btn_reiniciar, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(299, 299, 299))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btn_aceptarPrestamo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(182, 182, 182))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(18, 18, 18)
+                .addComponent(jLabel1)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(18, 18, 18)
-                        .addComponent(jLabel1)
-                        .addGap(37, 37, 37)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lbl_interes)
-                            .addComponent(txt_interes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btn_calcular, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(47, 47, 47)
-                                        .addComponent(txt_monto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel1Layout.createSequentialGroup()
-                                        .addGap(41, 41, 41)
-                                        .addComponent(lbl_monto)))
-                                .addGap(26, 26, 26)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(lbl_plazo)
-                                    .addComponent(txt_plazo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(41, 41, 41)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lbl_couta)
-                                    .addComponent(txt_cuota, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(50, 76, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(55, 55, 55)
-                                .addComponent(btn_reiniciar)
-                                .addGap(56, 56, 56)
-                                .addComponent(btn_proyeccion)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btn_aceptarPrestamo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btn_atras))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addContainerGap(344, Short.MAX_VALUE)
+                        .addGap(44, 44, 44)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txt_total, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING))))
-                .addGap(42, 42, 42)
-                .addComponent(btn_atras)
-                .addContainerGap())
+                            .addComponent(lbl_interes)
+                            .addComponent(txt_interes, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(39, 39, 39)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbl_monto)
+                            .addComponent(txt_monto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(30, 30, 30)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lbl_plazo)
+                            .addComponent(txt_plazo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(41, 41, 41)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lbl_couta)
+                            .addComponent(txt_cuota, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(39, 39, 39)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6)
+                            .addComponent(txt_total, javax.swing.GroupLayout.PREFERRED_SIZE, 21, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btn_proyeccion)
+                            .addComponent(btn_calcular, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btn_reiniciar))
+                        .addGap(27, 27, 27)
+                        .addComponent(btn_aceptarPrestamo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 585, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(8, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -219,32 +225,28 @@ public class frm_prestamos extends javax.swing.JFrame {
 
     private void btn_calcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_calcularActionPerformed
       
-      
-        
-        try {
-    double monto = Double.parseDouble(txt_monto.getText());
-    int plazo = Integer.parseInt(txt_plazo.getText());
+            try {
+        double monto = Double.parseDouble(txt_monto.getText());
+        int plazo = Integer.parseInt(txt_plazo.getText());
 
-    if (plazo > 12 || plazo <= 0) {
-        JOptionPane.showMessageDialog(this, "El plazo debe estar entre 1 y 12 meses.");
-        return;
+        if (plazo > 12 || plazo <= 0) {
+            JOptionPane.showMessageDialog(this, "El plazo debe estar entre 1 y 12 meses.");
+            return;
+        }
+
+        Prestamos prestamos = new Prestamos(monto, plazo);
+
+        double cuota = prestamos.calcularCuota();
+        double total = prestamos.calcularTotal();
+
+        txt_cuota.setText(String.format("%.2f", cuota));
+        txt_total.setText(String.format("%.2f", total));
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Por favor, ingresa valores numéricos válidos.");
     }
-
-    double interes = 0.20; 
-
-    
-    Prestamos prestamos = new Prestamos(monto, plazo);
-
-    double cuota = prestamos.calcularCuota();
-    double total = prestamos.calcularTotal();
-
-    txt_cuota.setText(String.format("%.2f", cuota));
-    txt_total.setText(String.format("%.2f", total));
-
-} catch (NumberFormatException e) {
-    JOptionPane.showMessageDialog(this, "Por favor, ingresa valores numéricos válidos.");
-}
-
+        
+       
         
         
     }//GEN-LAST:event_btn_calcularActionPerformed
@@ -258,9 +260,8 @@ public class frm_prestamos extends javax.swing.JFrame {
     }//GEN-LAST:event_btn_reiniciarActionPerformed
 
     private void btn_proyeccionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_proyeccionActionPerformed
-    try {
+     try {
         double monto = Double.parseDouble(txt_monto.getText());
-        double interes = 0.20; 
         int plazo = Integer.parseInt(txt_plazo.getText());
 
         if (plazo > 12 || plazo <= 0) {
@@ -268,25 +269,43 @@ public class frm_prestamos extends javax.swing.JFrame {
             return;
         }
 
-        Prestamos prestamos = new Prestamos(monto, plazo);
+        // Obtener el idCliente desde la sesión actual
+        Cliente cliente = SesionUsuario.getClienteActual();
+        if (cliente == null) {
+            JOptionPane.showMessageDialog(this, "No se ha iniciado sesión correctamente.");
+            return;
+        }
+        
+        String idCliente = cliente.getIdCliente();  // Ahora obtenemos el idCliente de la sesión
 
+        // Crear un nuevo préstamo
+        Prestamos prestamos = new Prestamos(monto, plazo);  // El idCliente ahora se maneja dentro del constructor
+
+        // Calculamos la cuota y el total
         double cuota = prestamos.calcularCuota();
         double total = prestamos.calcularTotal();
 
+        // Construimos la proyección de cuotas
         StringBuilder proyeccion = new StringBuilder();
         proyeccion.append("🧾 Proyección de cuotas:\n\n");
         proyeccion.append(String.format("Monto: Q%.2f\n", monto));
-        proyeccion.append(String.format("Interés: %.2f%%\n", interes * 100)); 
+        proyeccion.append(String.format("Interés: %.2f%%\n", 20.0));  // Interés fijo del 20%
         proyeccion.append(String.format("Plazo: %d meses\n\n", plazo));
         proyeccion.append("Cuotas:\n");
 
+        // Proyección de cada cuota
         for (int i = 1; i <= plazo; i++) {
             proyeccion.append(String.format("  Cuota %d: Q%.2f\n", i, cuota));
         }
 
         proyeccion.append(String.format("\nTotal a pagar: Q%.2f", total));
 
+        // Mostrar la proyección al usuario
         JOptionPane.showMessageDialog(this, proyeccion.toString(), "Proyección de Cuotas", JOptionPane.INFORMATION_MESSAGE);
+
+        // Aquí puedes agregar el préstamo a la base de datos si es necesario
+        // Si deseas guardar el préstamo, asegúrate de agregarlo a la base de datos
+        // Ejemplo: PrestamosDAO.guardarPrestamo(prestamo);
 
     } catch (NumberFormatException e) {
         JOptionPane.showMessageDialog(this, "Por favor, ingresa valores numéricos válidos.");
@@ -309,6 +328,50 @@ txt_interes.setEditable(false);
         dispose();
         
     }//GEN-LAST:event_btn_atrasActionPerformed
+
+    private void btn_aceptarPrestamoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_aceptarPrestamoActionPerformed
+
+        
+        try {
+        // Obtener los valores del formulario
+        double monto = Double.parseDouble(txt_monto.getText());
+        int plazo = Integer.parseInt(txt_plazo.getText());
+
+        // Validar el plazo
+        if (plazo > 12 || plazo <= 0) {
+            JOptionPane.showMessageDialog(this, "El plazo debe estar entre 1 y 12 meses.");
+            return;
+        }
+
+        // Obtener el idCliente desde la sesión actual
+        Cliente cliente = SesionUsuario.getClienteActual();
+        if (cliente == null) {
+            JOptionPane.showMessageDialog(this, "No se ha iniciado sesión correctamente.");
+            return;
+        }
+        
+        String idCliente = cliente.getIdCliente();  // Obtener el idCliente de la sesión
+
+        // Crear un objeto Prestamo con los datos ingresados
+        Prestamos prestamo = new Prestamos(monto, plazo); // idCliente ahora se pasa al constructor
+
+        // Llamar al método agregar() para realizar la inserción en la base de datos
+        if (prestamo.agregar()) {  // El método agregar() se encarga de insertar el préstamo
+            JOptionPane.showMessageDialog(this, "Préstamo registrado correctamente.");
+        } else {
+            JOptionPane.showMessageDialog(this, "Hubo un error al registrar el préstamo.");
+        }
+
+    } catch (NumberFormatException e) {
+        JOptionPane.showMessageDialog(this, "Por favor, ingresa valores numéricos válidos.");
+    }
+            
+
+    }//GEN-LAST:event_btn_aceptarPrestamoActionPerformed
+
+    private void txt_plazoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_plazoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_plazoActionPerformed
 
     /**
      * @param args the command line arguments

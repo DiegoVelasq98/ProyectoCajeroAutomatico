@@ -314,74 +314,98 @@ public class frm_inicio extends BaseForm {
  txt_pass.setText(txt_pass.getText() + "4");    }//GEN-LAST:event_btn_4ActionPerformed
 
     private void btn_pinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_pinActionPerformed
+       
+        
         String idClienteIngresado = txt_usuario.getText().trim().toUpperCase();
-        String pinIngresado = txt_pass.getText();
+    String pinIngresado = txt_pass.getText();
 
-        // Validaciones básicas
-        if (idClienteIngresado.isEmpty() || pinIngresado.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "Debe ingresar el ID de cliente y el PIN.",
-                    "Campos vacíos",
-                    JOptionPane.WARNING_MESSAGE);
-            return;
-        }
+    // Validaciones básicas
+    if (idClienteIngresado.isEmpty() || pinIngresado.isEmpty()) {
+        JOptionPane.showMessageDialog(this,
+                "Debe ingresar el ID de cliente y el PIN.",
+                "Campos vacíos",
+                JOptionPane.WARNING_MESSAGE);
+        return;
+    }
 
-        Conexion conexion = new Conexion();
+    // Validación del formato del ID del cliente (Ejemplo: C001 o C0001)
+    if (!idClienteIngresado.matches("C\\d{3,4}")) { // Permite 3 o 4 dígitos después de la C
+        JOptionPane.showMessageDialog(this,
+                "El ID del cliente debe tener el formato correcto (Ej: C001 o C0001).",
+                "Formato incorrecto",
+                JOptionPane.WARNING_MESSAGE);
+        return;
+    }
 
-        if (conexion.abrir_conexion()) {
-            try {
-                // Consulta sin usar hash, validando directamente el PIN (no recomendado en producción)
-                String authQuery = "SELECT nombre_cliente FROM cliente WHERE id_cliente = ? AND pin = ?";
-                PreparedStatement authStmt = conexion.conexion_bd.prepareStatement(authQuery);
-                authStmt.setString(1, idClienteIngresado);
-                authStmt.setString(2, pinIngresado);
+    // Validación de longitud del PIN (Debe ser un número de 4 dígitos)
+    if (!pinIngresado.matches("\\d{4}")) { // Verifica que el PIN tenga 4 dígitos
+        JOptionPane.showMessageDialog(this,
+                "El PIN debe ser un número de 4 dígitos.",
+                "PIN incorrecto",
+                JOptionPane.WARNING_MESSAGE);
+        return;
+    }
 
-                ResultSet authResult = authStmt.executeQuery();
+    // Establecer conexión con la base de datos
+    Conexion conexion = new Conexion();
 
-                if (authResult.next()) {
-                    // Autenticación exitosa
-                    String nombreCliente = authResult.getString("nombre_cliente");
+    if (conexion.abrir_conexion()) {
+        try {
+            // Consulta para verificar el ID y PIN del cliente
+            String authQuery = "SELECT nombre_cliente FROM cliente WHERE id_cliente = ? AND pin = ?";
+            PreparedStatement authStmt = conexion.conexion_bd.prepareStatement(authQuery);
+            authStmt.setString(1, idClienteIngresado);
+            authStmt.setInt(2, Integer.parseInt(pinIngresado));  // Convertir el PIN a número
 
-                    Cliente cliente = new Cliente();
-                    cliente.setIdCliente(idClienteIngresado);
-                    cliente.setNombre(nombreCliente);
+            ResultSet authResult = authStmt.executeQuery();
 
-                    // Guardar cliente en sesión
-                    SesionUsuario.setClienteActual(cliente);
+            if (authResult.next()) {
+                // Autenticación exitosa
+                String nombreCliente = authResult.getString("nombre_cliente");
 
-                    JOptionPane.showMessageDialog(this,
-                            "Bienvenido, " + nombreCliente,
-                            "Acceso permitido",
-                            JOptionPane.INFORMATION_MESSAGE);
+                Cliente cliente = new Cliente();
+                cliente.setIdCliente(idClienteIngresado);
+                cliente.setNombre(nombreCliente);
 
-                    frm_menu menu = new frm_menu();
-                    menu.setVisible(true);
-                    this.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(this,
-                            "ID o PIN incorrecto. Intente de nuevo.",
-                            "Acceso denegado",
-                            JOptionPane.ERROR_MESSAGE);
-                }
+                // Guardar cliente en sesión
+                SesionUsuario.setClienteActual(cliente);
 
-                authResult.close();
-                authStmt.close();
-
-            } catch (SQLException e) {
                 JOptionPane.showMessageDialog(this,
-                        "Error al autenticar: " + e.getMessage(),
-                        "Error en base de datos",
-                        JOptionPane.ERROR_MESSAGE);
-            } finally {
-                conexion.cerrar_conexion();
-            }
-        } else {
-            JOptionPane.showMessageDialog(this,
-                    "No se pudo conectar a la base de datos.",
-                    "Error de conexión",
-                    JOptionPane.ERROR_MESSAGE);
-        }
+                        "Bienvenido, " + nombreCliente,
+                        "Acceso permitido",
+                        JOptionPane.INFORMATION_MESSAGE);
 
+                frm_menu menu = new frm_menu();
+                menu.setVisible(true);
+                this.dispose();  // Cierra el formulario actual
+            } else {
+                // Si no se encuentra el cliente o el PIN es incorrecto
+                JOptionPane.showMessageDialog(this,
+                        "ID o PIN incorrecto. Intente de nuevo.",
+                        "Acceso denegado",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+
+            // Cerrar recursos
+            authResult.close();
+            authStmt.close();
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this,
+                    "Error al autenticar: " + e.getMessage(),
+                    "Error en base de datos",
+                    JOptionPane.ERROR_MESSAGE);
+        } finally {
+            // Cerrar la conexión a la base de datos
+            conexion.cerrar_conexion();
+        }
+    } else {
+        // Si no se pudo conectar a la base de datos
+        JOptionPane.showMessageDialog(this,
+                "No se pudo conectar a la base de datos.",
+                "Error de conexión",
+                JOptionPane.ERROR_MESSAGE);
+    }
         
             }//GEN-LAST:event_btn_pinActionPerformed
 

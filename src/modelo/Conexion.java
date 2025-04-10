@@ -14,10 +14,10 @@ public class Conexion {
     // Datos de conexión para Oracle
     private final String host = "localhost"; // o la IP del servidor Oracle
     private final String puerto = "1521"; // Puerto por defecto de Oracle
-    private final String sid = "xe"; // Nombre del SID de tu instancia Oracle
+    private final String sid = "orcl"; // Nombre del SID de tu instancia Oracle
     private final String urlConexion = String.format("jdbc:oracle:thin:@%s:%s:%s", host, puerto, sid); 
-    private final String usuario = "vicquino";
-    private final String password = "vicquino";
+    private final String usuario = "CAJERO";
+    private final String password = "CAJERO";
     private final String jdbc = "oracle.jdbc.OracleDriver";
 
     // Método para abrir la conexión a la bd
