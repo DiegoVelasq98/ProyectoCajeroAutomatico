@@ -3,16 +3,27 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package vista;
+
+import java.sql.*;
+
 import javax.swing.Timer;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
+import modelo.Cliente;
+import modelo.Pin;
+import modelo.Conexion;
+import modelo.SesionUsuario;
+
+import modelo.RetiroCajero;
+        
+import modelo.SesionUsuario;
 
 /**
  *
  * @author gp
  */
-public class frm_retiro extends javax.swing.JFrame {
+public class frm_retiro extends BaseForm {
 
     /**
      * Creates new form frm_transferencia
@@ -20,6 +31,18 @@ public class frm_retiro extends javax.swing.JFrame {
     private javax.swing.JLabel mensajeLabel; 
     public frm_retiro() {
         initComponents();
+        
+        if (this.clienteActual != null) {
+            lbl_usuario.setText("Sesión de: " + this.clienteActual.getNombre());
+        } else {
+            lbl_usuario.setText("No hay sesión activa");
+            JOptionPane.showMessageDialog(this,
+                    "No se encontró sesión activa",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            this.dispose();
+            new frm_inicio().setVisible(true);
+        }
         
     mensajeLabel = new javax.swing.JLabel();
     mensajeLabel.setFont(new java.awt.Font("Segoe UI", 1, 14));
@@ -61,6 +84,7 @@ public class frm_retiro extends javax.swing.JFrame {
         retiro200 = new javax.swing.JButton();
         retiro1000 = new javax.swing.JButton();
         Regresar = new javax.swing.JButton();
+        lbl_usuario = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -231,7 +255,9 @@ public class frm_retiro extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel2)
-                .addGap(190, 190, 190))
+                .addGap(35, 35, 35)
+                .addComponent(lbl_usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(35, 35, 35))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -245,19 +271,25 @@ public class frm_retiro extends javax.swing.JFrame {
                         .addGap(30, 30, 30)
                         .addComponent(montoVariable, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(93, 93, 93)
-                        .addComponent(retiro200, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(retiro500, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(17, 17, 17)
-                        .addComponent(retiro1000, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
-                        .addComponent(Regresar, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
                         .addContainerGap()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(11, 11, 11)
-                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(11, 11, 11))
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(lbl_usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(50, 50, 50)
+                                .addComponent(retiro200, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(retiro500, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(17, 17, 17)
+                                .addComponent(retiro1000, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(Regresar, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap(46, Short.MAX_VALUE))
         );
 
@@ -266,7 +298,27 @@ public class frm_retiro extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void retiro300ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retiro300ActionPerformed
-        // TODO add your handling code here:
+
+        double monto = 300.0;  // Monto del retiro
+    String mensaje = RetiroCajero.retiro(monto);  // Llamamos al método para hacer el retiro
+
+    // Mostrar el mensaje al usuario
+    JOptionPane.showMessageDialog(this, mensaje);
+
+    // Lógica para manejar la respuesta del mensaje (si es necesario)
+    int respuesta = JOptionPane.showConfirmDialog(
+        this,
+        mensaje + "\n¿Desea realizar otra transacción?", 
+        "Confirmación", 
+        JOptionPane.YES_NO_OPTION
+    );
+
+    if (respuesta == JOptionPane.NO_OPTION) {
+        frm_menu menu = new frm_menu();
+        menu.setVisible(true);
+        dispose();
+    }
+
     }//GEN-LAST:event_retiro300ActionPerformed
 
     private void montoVariableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_montoVariableActionPerformed
@@ -278,16 +330,41 @@ public class frm_retiro extends javax.swing.JFrame {
     }//GEN-LAST:event_montoVariableActionPerformed
 
     private void retiro500ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retiro500ActionPerformed
-        // TODO add your handling code here:
+       
+        
+        double monto = 500.0;  // Monto del retiro
+    String mensaje = RetiroCajero.retiro(monto);  // Llamamos al método para hacer el retiro
+
+    // Mostrar el mensaje al usuario
+    JOptionPane.showMessageDialog(this, mensaje);
+
+    // Lógica para manejar la respuesta del mensaje (si es necesario)
+    int respuesta = JOptionPane.showConfirmDialog(
+        this,
+        mensaje + "\n¿Desea realizar otra transacción?", 
+        "Confirmación", 
+        JOptionPane.YES_NO_OPTION
+    );
+
+    if (respuesta == JOptionPane.NO_OPTION) {
+        frm_menu menu = new frm_menu();
+        menu.setVisible(true);
+        dispose();
+    }
     }//GEN-LAST:event_retiro500ActionPerformed
 
     private void retiro100ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retiro100ActionPerformed
 
-         int respuesta = JOptionPane.showConfirmDialog(
+    double monto = 100.0;  // Monto del retiro
+    String mensaje = RetiroCajero.retiro(monto);  // Llamamos al método para hacer el retiro
+
+    // Mostrar el mensaje al usuario
+    JOptionPane.showMessageDialog(this, mensaje);
+
+    // Lógica para manejar la respuesta del mensaje (si es necesario)
+    int respuesta = JOptionPane.showConfirmDialog(
         this,
-            
-        "Transaccion EXITOSA "
-      + "¿Desea realizar otra transacción?", 
+        mensaje + "\n¿Desea realizar otra transacción?", 
         "Confirmación", 
         JOptionPane.YES_NO_OPTION
     );
@@ -298,15 +375,20 @@ public class frm_retiro extends javax.swing.JFrame {
         dispose();
     }
         
-        // TODO add your handling code here:
     }//GEN-LAST:event_retiro100ActionPerformed
 
     private void retiro200ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retiro200ActionPerformed
+ 
+        double monto = 200.0;  // Monto del retiro
+    String mensaje = RetiroCajero.retiro(monto);  // Llamamos al método para hacer el retiro
+
+    // Mostrar el mensaje al usuario
+    JOptionPane.showMessageDialog(this, mensaje);
+
+    // Lógica para manejar la respuesta del mensaje (si es necesario)
     int respuesta = JOptionPane.showConfirmDialog(
         this,
-            
-        "Transaccion EXITOSA "
-      + "¿Desea realizar otra transacción?", 
+        mensaje + "\n¿Desea realizar otra transacción?", 
         "Confirmación", 
         JOptionPane.YES_NO_OPTION
     );
@@ -321,7 +403,27 @@ public class frm_retiro extends javax.swing.JFrame {
     }//GEN-LAST:event_retiro200ActionPerformed
 
     private void retiro1000ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retiro1000ActionPerformed
-        // TODO add your handling code here:
+        double monto = 1000.0;  // Monto del retiro
+    String mensaje = RetiroCajero.retiro(monto);  // Llamamos al método para hacer el retiro
+
+    // Mostrar el mensaje al usuario
+    JOptionPane.showMessageDialog(this, mensaje);
+
+    // Lógica para manejar la respuesta del mensaje (si es necesario)
+    int respuesta = JOptionPane.showConfirmDialog(
+        this,
+        mensaje + "\n¿Desea realizar otra transacción?", 
+        "Confirmación", 
+        JOptionPane.YES_NO_OPTION
+    );
+
+    if (respuesta == JOptionPane.NO_OPTION) {
+        frm_menu menu = new frm_menu();
+        menu.setVisible(true);
+        dispose();
+    }
+                
+                
     }//GEN-LAST:event_retiro1000ActionPerformed
 
     private void RegresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RegresarActionPerformed
@@ -384,6 +486,7 @@ public class frm_retiro extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JLabel lbl_usuario;
     private javax.swing.JButton montoVariable;
     private javax.swing.JButton retiro100;
     private javax.swing.JButton retiro1000;

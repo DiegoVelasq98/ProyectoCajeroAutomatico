@@ -57,6 +57,7 @@ public class frm_menu_Consulta extends javax.swing.JFrame {
         txt_saldo.setEditable(false);
         txt_saldo.setBackground(new java.awt.Color(51, 255, 255));
         txt_saldo.setFont(new java.awt.Font("Ubuntu Mono", 1, 48)); // NOI18N
+        txt_saldo.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txt_saldo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txt_saldoActionPerformed(evt);

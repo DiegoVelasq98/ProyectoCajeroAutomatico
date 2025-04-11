@@ -33,7 +33,6 @@ public class frm_menu_prestamo extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         btn_regresar = new javax.swing.JButton();
-        btn_pago_prestamo = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         txt_saldo_prestamos = new javax.swing.JTextField();
 
@@ -49,17 +48,12 @@ public class frm_menu_prestamo extends javax.swing.JFrame {
             }
         });
 
-        btn_pago_prestamo.setText("Pago de Prestamo");
-        btn_pago_prestamo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btn_pago_prestamoActionPerformed(evt);
-            }
-        });
-
         jPanel1.setBackground(new java.awt.Color(51, 255, 255));
 
+        txt_saldo_prestamos.setEditable(false);
         txt_saldo_prestamos.setBackground(new java.awt.Color(51, 255, 255));
         txt_saldo_prestamos.setFont(new java.awt.Font("Ubuntu Mono", 1, 36)); // NOI18N
+        txt_saldo_prestamos.setHorizontalAlignment(javax.swing.JTextField.CENTER);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -82,12 +76,6 @@ public class frm_menu_prestamo extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(62, 62, 62)
-                .addComponent(btn_regresar)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btn_pago_prestamo)
-                .addGap(56, 56, 56))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(72, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -99,6 +87,10 @@ public class frm_menu_prestamo extends javax.swing.JFrame {
                             .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2))
                         .addGap(69, 69, 69))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(64, 64, 64)
+                .addComponent(btn_regresar)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -109,11 +101,9 @@ public class frm_menu_prestamo extends javax.swing.JFrame {
                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 44, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 23, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btn_regresar)
-                    .addComponent(btn_pago_prestamo))
-                .addGap(62, 62, 62))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
+                .addComponent(btn_regresar)
+                .addGap(41, 41, 41))
         );
 
         pack();
@@ -126,14 +116,6 @@ public class frm_menu_prestamo extends javax.swing.JFrame {
         fr.setVisible(true);
         dispose();
     }//GEN-LAST:event_btn_regresarActionPerformed
-
-    private void btn_pago_prestamoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_pago_prestamoActionPerformed
-
- frn_pago_prestamo fr = new frn_pago_prestamo();
-        fr.setVisible(true);
-        dispose();
-
-    }//GEN-LAST:event_btn_pago_prestamoActionPerformed
 
     /**
      * @param args the command line arguments
@@ -171,7 +153,6 @@ public class frm_menu_prestamo extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btn_pago_prestamo;
     private javax.swing.JButton btn_regresar;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

@@ -16,12 +16,12 @@ public class Prestamos {
         this.interes = 20.0; // Interés fijo
         this.plazo = plazo;
 
-        Cliente cliente = SesionUsuario.getClienteActual();  
+
+        
+               Cliente cliente = SesionUsuario.getClienteActual();  
         if (cliente != null) {
             this.idCliente = cliente.getIdCliente();  // Suponiendo que Cliente tiene un método getIdCliente()
-        }
-        
-        
+        } 
     }
 
     public String getIdPrestamo() {
@@ -65,6 +65,8 @@ public class Prestamos {
         double interesTotal = monto * interesDecimal * plazo;
         return monto + interesTotal;
     }
+    
+    
 
    public boolean agregar() {
     int retorno = 0;
@@ -102,10 +104,18 @@ public class Prestamos {
         parametro.setDate(5, Date.valueOf(LocalDate.now()));  // Fecha de inicio
         parametro.setDate(6, Date.valueOf(LocalDate.now().plusMonths(plazo)));  // Fecha de vencimiento calculada
         parametro.setString(7, "Vigente");  // Estado del préstamo
-        parametro.setString(8, idCliente);  
+        parametro.setString(8, idCliente);  // id_cliente
 
         // Ejecutar la actualización
         retorno = parametro.executeUpdate();
+
+        // Verificar si la inserción fue exitosa
+        if (retorno > 0) {
+            System.out.println("Préstamo insertado correctamente con ID: " + idPrestamo);
+        } else {
+            System.out.println("No se pudo insertar el préstamo.");
+        }
+
         cn.cerrar_conexion();
 
     } catch (SQLException ex) {
@@ -117,5 +127,7 @@ public class Prestamos {
     // Si la inserción fue exitosa, retornamos true
     return retorno > 0;
 }
+
+
 
 }
