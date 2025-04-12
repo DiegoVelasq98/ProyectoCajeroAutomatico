@@ -412,3 +412,6 @@ END;
 
 COMMIT;
 
+
+
+![Imagen de WhatsApp 2025-04-11 a las 23 11 15_63eaaf03](https://github.com/user-attachments/assets/40207635-e532-4510-80b3-aedd6208bdd4)
