@@ -21,3 +21,9 @@ MySQL
 Oracle
 
 JDBC
+
+
+# Integrantes
+* 7691-18-26253 Ana Maria Montufar Aguirre
+* 7690-21-1522 Jefferson Ramiro López Ramírez
+* 7690-16-3882 Diego Fernando Velásquez Pichilla
