@@ -415,3 +415,313 @@ COMMIT;
 
 
 ![Imagen de WhatsApp 2025-04-11 a las 23 11 15_63eaaf03](https://github.com/user-attachments/assets/40207635-e532-4510-80b3-aedd6208bdd4)
+
+
+
+
+
+-- tabla bitácora
+CREATE TABLE bitacora (
+    id_log NUMBER PRIMARY KEY,
+    tabla_afectada VARCHAR2(30),
+    operacion VARCHAR2(10),
+    id_afectado VARCHAR2(30),
+    detalle_cambios CLOB,
+    usuario VARCHAR2(30),
+    fecha_log TIMESTAMP
+);
+
+--secuencia logs
+
+CREATE SEQUENCE seq_bitacora
+START WITH 1
+INCREMENT BY 1;
+
+-- cliente 
+
+CREATE OR REPLACE TRIGGER trg_bitacora_cliente
+AFTER INSERT OR UPDATE OR DELETE ON cliente
+FOR EACH ROW
+BEGIN
+    INSERT INTO bitacora (
+        id_log, tabla_afectada, operacion, id_afectado,
+        detalle_cambios, usuario, fecha_log
+    )
+    VALUES (
+        seq_bitacora.NEXTVAL,
+        'cliente',
+        CASE
+            WHEN INSERTING THEN 'INSERT'
+            WHEN UPDATING THEN 'UPDATE'
+            WHEN DELETING THEN 'DELETE'
+        END,
+        NVL(:NEW.id_cliente, :OLD.id_cliente),
+        CASE
+            WHEN INSERTING THEN 'Nuevo cliente: ' || :NEW.nombre_cliente || ', Tel: ' || :NEW.telefono
+            WHEN UPDATING THEN 'Cambio en cliente: de ' || :OLD.nombre_cliente || ' a ' || :NEW.nombre_cliente
+            WHEN DELETING THEN 'Cliente eliminado: ' || :OLD.nombre_cliente
+        END,
+        USER,
+        SYSTIMESTAMP
+    );
+END;
+
+-- triger cuenta
+
+CREATE OR REPLACE TRIGGER trg_bitacora_cuenta
+AFTER INSERT OR UPDATE OR DELETE ON cuenta
+FOR EACH ROW
+BEGIN
+    INSERT INTO bitacora (
+        id_log, tabla_afectada, operacion, id_afectado,
+        detalle_cambios, usuario, fecha_log
+    )
+    VALUES (
+        seq_bitacora.NEXTVAL,
+        'cuenta',
+        CASE
+            WHEN INSERTING THEN 'INSERT'
+            WHEN UPDATING THEN 'UPDATE'
+            WHEN DELETING THEN 'DELETE'
+        END,
+        NVL(:NEW.id_cuenta, :OLD.id_cuenta),
+        CASE
+            WHEN INSERTING THEN 'Nueva cuenta: Tipo ' || :NEW.tipo_cuenta || ', Saldo: ' || :NEW.saldo
+            WHEN UPDATING THEN 'Cambio en saldo: de ' || :OLD.saldo || ' a ' || :NEW.saldo
+            WHEN DELETING THEN 'Cuenta eliminada: Tipo ' || :OLD.tipo_cuenta || ', Saldo: ' || :OLD.saldo
+        END,
+        USER,
+        SYSTIMESTAMP
+    );
+END;
+
+--triger transaccion
+
+CREATE OR REPLACE TRIGGER trg_bitacora_transaccion
+AFTER INSERT OR UPDATE OR DELETE ON transaccion
+FOR EACH ROW
+BEGIN
+    INSERT INTO bitacora (
+        id_log, tabla_afectada, operacion, id_afectado,
+        detalle_cambios, usuario, fecha_log
+    )
+    VALUES (
+        seq_bitacora.NEXTVAL,
+        'transaccion',
+        CASE
+            WHEN INSERTING THEN 'INSERT'
+            WHEN UPDATING THEN 'UPDATE'
+            WHEN DELETING THEN 'DELETE'
+        END,
+        NVL(:NEW.id_transaccion, :OLD.id_transaccion),
+        CASE
+            WHEN INSERTING THEN 'Nueva transacción: ' || :NEW.tipo_transaccion || ', Monto: ' || :NEW.monto
+            WHEN UPDATING THEN 'Cambio en transacción: de ' || :OLD.monto || ' a ' || :NEW.monto
+            WHEN DELETING THEN 'Transacción eliminada: ' || :OLD.tipo_transaccion || ', Monto: ' || :OLD.monto
+        END,
+        USER,
+        SYSTIMESTAMP
+    );
+END;
+
+-- select para visualizar la bitácora
+
+SELECT 
+    id_log,
+    tabla_afectada,
+    operacion,
+    id_afectado,
+    detalle_cambios,
+    usuario,
+    TO_CHAR(fecha_log, 'DD-MM-YYYY HH24:MI:SS') AS fecha_log
+FROM 
+    bitacora
+ORDER BY 
+    fecha_log DESC;
+    
+    
+ 
+ 
+ 
+CREATE OR REPLACE TRIGGER trg_bitacora_cliente
+AFTER INSERT OR UPDATE OR DELETE ON cliente
+FOR EACH ROW
+DECLARE
+    v_operacion VARCHAR2(10);
+    v_detalle   VARCHAR2(4000);
+    v_id_afectado NUMBER; -- Variable para almacenar el ID
+BEGIN
+    IF INSERTING THEN
+        v_operacion := 'INSERT';
+        v_detalle := 'Se insertó el cliente con nombre: ' || :NEW.nombre_cliente;
+        v_id_afectado := :NEW.id_cliente;  -- Asignar el id del cliente insertado
+    ELSIF UPDATING THEN
+        v_operacion := 'UPDATE';
+        v_detalle := 'Se actualizó el cliente con ID: ' || :OLD.id_cliente;
+        v_id_afectado := :NEW.id_cliente;  -- Asignar el id del cliente actualizado
+    ELSIF DELETING THEN
+        v_operacion := 'DELETE';
+        v_detalle := 'Se eliminó el cliente con ID: ' || :OLD.id_cliente;
+        v_id_afectado := :OLD.id_cliente;  -- Asignar el id del cliente eliminado
+    END IF;
+
+    INSERT INTO bitacora (
+        id_log,
+        tabla_afectada,
+        operacion,
+        id_afectado,
+        detalle_cambios,
+        usuario,
+        fecha_log
+    ) VALUES (
+        seq_id_log.NEXTVAL,
+        'cliente',
+        v_operacion,
+        v_id_afectado,  -- Usar la variable v_id_afectado
+        v_detalle,
+        SYS_CONTEXT('USERENV', 'SESSION_USER'),
+        SYSTIMESTAMP
+    );
+END;
+
+
+
+CREATE SEQUENCE seq_id_log
+START WITH 1
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+
+
+
+--table space 
+create tablespace Cajero
+--aqui se cambia la ruta
+datafile 'C:\app\oracleEX\Proyecto.dbf' size 50M
+autoextend on next 50M
+maxsize unlimited
+extent management local segment
+space management auto
+
+--table space 
+create tablespace Bitacora
+--aqui se cambia la ruta
+datafile 'C:\app\oracleEX\Proyecto.dbf' size 50M
+autoextend on next 50M
+maxsize unlimited
+extent management local segment
+space management auto
+
+
+-- USUARIOS DBA
+
+CREATE USER C##UsuarioDba1 IDENTIFIED BY "123456";
+GRANT CREATE SESSION TO C##UsuarioDba1;
+GRANT CREATE TABLE TO C##UsuarioDba1;
+GRANT CREATE PROCEDURE TO C##UsuarioDba1;
+GRANT CREATE VIEW TO C##UsuarioDba1;
+GRANT CREATE TRIGGER TO C##UsuarioDba1;
+GRANT CREATE SEQUENCE TO C##UsuarioDba1;
+GRANT ALTER ANY TABLE TO C##UsuarioDba1;
+ALTER USER C##UsuarioDba1 DEFAULT TABLESPACE Cajero;
+ALTER USER C##UsuarioDba1 TEMPORARY TABLESPACE TEMP;
+ALTER USER C##UsuarioDba1 DEFAULT ROLE ALL;
+ALTER USER C##UsuarioDba1 QUOTA UNLIMITED ON Cajero;
+ALTER USER C##UsuarioDba1 QUOTA UNLIMITED ON Auditoria;
+
+CREATE USER C##UsuarioDba2 IDENTIFIED BY "123456";
+GRANT CREATE SESSION TO C##UsuarioDba2;
+GRANT CREATE TABLE TO C##UsuarioDba2;
+GRANT CREATE PROCEDURE TO C##UsuarioDba2;
+GRANT CREATE VIEW TO C##UsuarioDba2;
+GRANT CREATE TRIGGER TO C##UsuarioDba2;
+GRANT CREATE SEQUENCE TO C##UsuarioDba2;
+GRANT ALTER ANY TABLE TO C##UsuarioDba2;
+ALTER USER C##UsuarioDba2 DEFAULT TABLESPACE Cajero;
+ALTER USER C##UsuarioDba2 TEMPORARY TABLESPACE TEMP;
+ALTER USER C##UsuarioDba2 DEFAULT ROLE ALL;
+ALTER USER C##UsuarioDba2 QUOTA UNLIMITED ON Cajero;
+ALTER USER C##UsuarioDba2 QUOTA UNLIMITED ON Auditoria;
+
+-- USUARIOS DESARROLLADORES 
+
+CREATE USER C##Dev1 IDENTIFIED BY "123456";
+GRANT CREATE SESSION TO C##Dev1;
+GRANT CREATE TABLE TO C##Dev1;
+GRANT CREATE PROCEDURE TO C##Dev1;
+GRANT CREATE VIEW TO C##Dev1;
+GRANT CREATE TRIGGER TO C##Dev1;
+GRANT CREATE SEQUENCE TO C##Dev1;
+GRANT INSERT ANY TABLE TO C##Dev1;
+GRANT SELECT ANY TABLE TO C##Dev1;
+GRANT UPDATE ANY TABLE TO C##Dev1;
+GRANT DELETE ANY TABLE TO C##Dev1;
+ALTER USER C##Dev1 DEFAULT TABLESPACE Cajero;
+ALTER USER C##Dev1 TEMPORARY TABLESPACE TEMP;
+ALTER USER C##Dev1 DEFAULT ROLE ALL;
+ALTER USER C##Dev1 QUOTA UNLIMITED ON Cajero;
+
+CREATE USER C##Dev2 IDENTIFIED BY "123456";
+GRANT CREATE SESSION TO C##Dev2;
+GRANT CREATE TABLE TO C##Dev2;
+GRANT CREATE PROCEDURE TO C##Dev2;
+GRANT CREATE VIEW TO C##Dev2;
+GRANT CREATE TRIGGER TO C##Dev2;
+GRANT CREATE SEQUENCE TO C##Dev2;
+GRANT INSERT ANY TABLE TO C##Dev2;
+GRANT SELECT ANY TABLE TO C##Dev2;
+GRANT UPDATE ANY TABLE TO C##Dev2;
+GRANT DELETE ANY TABLE TO C##Dev2;
+ALTER USER C##Dev2 DEFAULT TABLESPACE Cajero;
+ALTER USER C##Dev2 TEMPORARY TABLESPACE TEMP;
+ALTER USER C##Dev2 DEFAULT ROLE ALL;
+ALTER USER C##Dev2 QUOTA UNLIMITED ON Cajero;
+
+CREATE USER C##Dev3 IDENTIFIED BY "123456";
+GRANT CREATE SESSION TO C##Dev3;
+GRANT CREATE TABLE TO C##Dev3;
+GRANT CREATE PROCEDURE TO C##Dev3;
+GRANT CREATE VIEW TO C##Dev3;
+GRANT CREATE TRIGGER TO C##Dev3;
+GRANT CREATE SEQUENCE TO C##Dev3;
+GRANT INSERT ANY TABLE TO C##Dev3;
+GRANT SELECT ANY TABLE TO C##Dev3;
+GRANT UPDATE ANY TABLE TO C##Dev3;
+GRANT DELETE ANY TABLE TO C##Dev3;
+ALTER USER C##Dev3 DEFAULT TABLESPACE Cajero;
+ALTER USER C##Dev3 TEMPORARY TABLESPACE TEMP;
+ALTER USER C##Dev3 DEFAULT ROLE ALL;
+ALTER USER C##Dev3 QUOTA UNLIMITED ON Cajero;
+
+-- PERMISOS CRUD SOBRE LAS TABLAS A LOS DESARROLLADORES
+
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON transaccion TO C##Dev1;
+GRANT SELECT, INSERT, UPDATE, DELETE ON transaccion TO C##Dev2;
+GRANT SELECT, INSERT, UPDATE, DELETE ON transaccion TO C##Dev3;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON pago TO C##Dev1;
+GRANT SELECT, INSERT, UPDATE, DELETE ON pago TO C##Dev2;
+GRANT SELECT, INSERT, UPDATE, DELETE ON pago TO C##Dev3;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON prestamo TO C##Dev1;
+GRANT SELECT, INSERT, UPDATE, DELETE ON prstamo TO C##Dev2;
+GRANT SELECT, INSERT, UPDATE, DELETE ON pestamo TO C##Dev3;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON tarjeta TO C##Dev1;
+GRANT SELECT, INSERT, UPDATE, DELETE ON tarjeta TO C##Dev2;
+GRANT SELECT, INSERT, UPDATE, DELETE ON tarjeta TO C##Dev3;
+
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON cuenta TO C##Dev1;
+GRANT SELECT, INSERT, UPDATE, DELETE ON cuenta TO C##Dev2;
+GRANT SELECT, INSERT, UPDATE, DELETE ON cuenta TO C##Dev3;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON cliente TO C##Dev1;
+GRANT SELECT, INSERT, UPDATE, DELETE ON cliente TO C##Dev2;
+GRANT SELECT, INSERT, UPDATE, DELETE ON cliente TO C##Dev3;
+
+GRANT SELECT, INSERT, UPDATE, DELETE ON Bitacora TO C##Dev1;
+GRANT SELECT, INSERT, UPDATE, DELETE ON Bitacora TO C##Dev2;
+GRANT SELECT, INSERT, UPDATE, DELETE ON Bitacora TO C##Dev3;
