@@ -52,19 +52,18 @@ public class Prestamos {
         return (interes / 100) / 12; 
     }
 
-    // Calcular cuota mensual usando interés simple
-    public double calcularCuota() {
-        double interesDecimal = obtenerInteresDecimal();
-        double interesTotal = monto * interesDecimal * plazo;
-        return (monto + interesTotal) / plazo;
-    }
+  // Calcular cuota mensual usando interés simple anual
+public double calcularCuota() {
+    double interesTotal = monto * (interes / 100); // interés simple anual
+    double montoTotal = monto + interesTotal;
+    return Math.round((montoTotal / plazo) * 100.0) / 100.0; // redondeo a 2 decimales
+}
 
-    // Calcular total a pagar usando interés simple
-    public double calcularTotal() {
-        double interesDecimal = obtenerInteresDecimal();
-        double interesTotal = monto * interesDecimal * plazo;
-        return monto + interesTotal;
-    }
+// Calcular total a pagar usando interés simple anual
+public double calcularTotal() {
+    double interesTotal = monto * (interes / 100);
+    return monto + interesTotal;
+}
     
     
 

@@ -4,17 +4,81 @@
  */
 package vista;
 
+import com.sun.jdi.connect.spi.Connection;
+import javax.swing.JOptionPane;
+import modelo.Conexion;
+import java.sql.CallableStatement;
+import java.sql.SQLException;
+
 /**
  *
  * @author Victor
  */
-public class frm_transferencia extends javax.swing.JFrame {
+public class frm_transferencia extends BaseForm {
 
     /**
      * Creates new form frm_transferencia
      */
     public frm_transferencia() {
         initComponents();
+
+        if (this.clienteActual != null) {
+            lbl_usuario.setText("Sesión de: " + this.clienteActual.getNombre());
+            cargarCuentaOrigen();
+        } else {
+            lbl_usuario.setText("No hay sesión activa");
+            JOptionPane.showMessageDialog(this,
+                    "No se encontró sesión activa",
+                    "Error",
+                    JOptionPane.ERROR_MESSAGE);
+            this.dispose();
+            new frm_inicio().setVisible(true);
+        }
+    }
+
+    private void cargarCuentaOrigen() {
+        Conexion conexion = new Conexion();
+        CallableStatement stmt = null;
+        java.sql.ResultSet rs = null;
+
+        try {
+            if (conexion.abrir_conexion()) {
+                String sql = "SELECT id_cuenta FROM cuenta WHERE id_cliente = ?";
+                stmt = conexion.conexion_bd.prepareCall(sql);
+                stmt.setString(1, this.clienteActual.getIdCliente());
+
+                rs = stmt.executeQuery();
+
+                if (rs.next()) {
+                    String cuenta = rs.getString("id_cuenta");
+                    txt_cuenta_origen.setText(cuenta);
+                    txt_cuenta_origen.setEditable(false); // para que no se pueda modificar
+                } else {
+                    JOptionPane.showMessageDialog(this, "No se encontró ninguna cuenta asociada al cliente.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(this, "Error al obtener la cuenta del cliente: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            try {
+                if (rs != null) {
+                    rs.close();
+                }
+                if (stmt != null) {
+                    stmt.close();
+                }
+                conexion.cerrar_conexion();
+            } catch (SQLException ex) {
+                System.err.println("Error al cerrar recursos: " + ex.getMessage());
+            }
+        }
+
+    }
+
+    private void limpiarCampos() {
+        txt_cuenta_destino.setText("");
+        txt_monto_transferir.setText("");
+        // No se limpia cuenta origen porque viene del sistema (combo o campo bloqueado)
     }
 
     /**
@@ -32,14 +96,16 @@ public class frm_transferencia extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         lbl_cuenta = new javax.swing.JLabel();
         lbl_monto = new javax.swing.JLabel();
-        txt_cuenta = new javax.swing.JTextField();
-        txt_moneto = new javax.swing.JTextField();
+        txt_cuenta_destino = new javax.swing.JTextField();
+        txt_monto_transferir = new javax.swing.JTextField();
+        txt_cuenta_origen = new javax.swing.JTextField();
+        lbl_cuenta1 = new javax.swing.JLabel();
+        lbl_usuario = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         btn_cancelar.setBackground(new java.awt.Color(255, 0, 51));
         btn_cancelar.setFont(new java.awt.Font("Ubuntu Mono", 1, 24)); // NOI18N
-        btn_cancelar.setForeground(new java.awt.Color(0, 0, 0));
         btn_cancelar.setText("Cancelar");
         btn_cancelar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -49,7 +115,6 @@ public class frm_transferencia extends javax.swing.JFrame {
 
         btn_confirmar.setBackground(new java.awt.Color(0, 255, 51));
         btn_confirmar.setFont(new java.awt.Font("Ubuntu Mono", 1, 24)); // NOI18N
-        btn_confirmar.setForeground(new java.awt.Color(0, 0, 0));
         btn_confirmar.setText("Confirmar");
         btn_confirmar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -59,21 +124,28 @@ public class frm_transferencia extends javax.swing.JFrame {
 
         jPanel3.setBackground(new java.awt.Color(51, 255, 255));
         jPanel3.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0), 5));
-        jPanel3.setForeground(new java.awt.Color(0, 0, 0));
 
         lbl_cuenta.setFont(new java.awt.Font("Ubuntu Mono", 1, 18)); // NOI18N
-        lbl_cuenta.setForeground(new java.awt.Color(0, 0, 0));
-        lbl_cuenta.setText("Cuenta");
+        lbl_cuenta.setText("Cuenta destino");
 
         lbl_monto.setFont(new java.awt.Font("Ubuntu Mono", 1, 18)); // NOI18N
-        lbl_monto.setForeground(new java.awt.Color(0, 0, 0));
         lbl_monto.setText("Monto");
 
-        txt_cuenta.addActionListener(new java.awt.event.ActionListener() {
+        txt_cuenta_destino.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txt_cuentaActionPerformed(evt);
+                txt_cuenta_destinoActionPerformed(evt);
             }
         });
+
+        txt_cuenta_origen.setEditable(false);
+        txt_cuenta_origen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txt_cuenta_origenActionPerformed(evt);
+            }
+        });
+
+        lbl_cuenta1.setFont(new java.awt.Font("Ubuntu Mono", 1, 18)); // NOI18N
+        lbl_cuenta1.setText("Cuenta origen");
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -81,28 +153,37 @@ public class frm_transferencia extends javax.swing.JFrame {
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                 .addContainerGap(53, Short.MAX_VALUE)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lbl_cuenta)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                        .addComponent(lbl_cuenta1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txt_cuenta_origen, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addComponent(lbl_monto, javax.swing.GroupLayout.PREFERRED_SIZE, 117, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(txt_moneto, javax.swing.GroupLayout.DEFAULT_SIZE, 162, Short.MAX_VALUE)
-                            .addComponent(txt_cuenta))))
-                .addGap(65, 65, 65))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txt_monto_transferir, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(lbl_cuenta)
+                        .addGap(38, 38, 38)
+                        .addComponent(txt_cuenta_destino, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(33, 33, 33))
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel3Layout.createSequentialGroup()
-                .addGap(36, 36, 36)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(lbl_cuenta)
-                    .addComponent(txt_cuenta, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(40, 40, 40)
+                .addContainerGap(45, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lbl_monto)
-                    .addComponent(txt_moneto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(73, Short.MAX_VALUE))
+                    .addComponent(txt_cuenta_origen, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_cuenta1))
+                .addGap(26, 26, 26)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txt_cuenta_destino, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_cuenta))
+                .addGap(32, 32, 32)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txt_monto_transferir, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lbl_monto))
+                .addGap(22, 22, 22))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -116,14 +197,21 @@ public class frm_transferencia extends javax.swing.JFrame {
                 .addComponent(btn_cancelar)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(49, Short.MAX_VALUE)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(98, 98, 98))
+                .addContainerGap(98, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(98, 98, 98))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                        .addComponent(lbl_usuario, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(108, 108, 108))))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(12, 12, 12)
+                .addComponent(lbl_usuario, javax.swing.GroupLayout.DEFAULT_SIZE, 29, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -136,36 +224,114 @@ public class frm_transferencia extends javax.swing.JFrame {
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(36, 36, 36))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGap(47, 47, 47))
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
-        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_confirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_confirmarActionPerformed
-        // TODO add your handling code here:
+        String cuentaOrigen = txt_cuenta_origen.getText();
+        String cuentaDestino = txt_cuenta_destino.getText();
+        double monto;
+
+        try {
+            monto = Double.parseDouble(txt_monto_transferir.getText());
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Monto inválido", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        Conexion conexion = new Conexion();
+        CallableStatement stmt = null;
+
+        try {
+            if (conexion.abrir_conexion()) {
+                conexion.conexion_bd.setAutoCommit(false); // Desactiva autocommit para manejar el commit/rollback manual
+
+                String sql = "{call sp_transferencia_entre_cajas(?, ?, ?, ?)}";
+                stmt = conexion.conexion_bd.prepareCall(sql);
+
+                stmt.setString(1, cuentaOrigen);
+                stmt.setString(2, cuentaDestino);
+                stmt.setDouble(3, monto);
+                stmt.registerOutParameter(4, java.sql.Types.VARCHAR);
+
+                stmt.execute();
+
+                String mensaje = stmt.getString(4);
+                // Aquí aún no se hace commit
+
+                if (!mensaje.contains("✓ Transferencia exitosa")) {
+                    conexion.conexion_bd.rollback();
+                    JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                int confirmacion = JOptionPane.showConfirmDialog(this,
+                        "Transferencia por $" + monto + " a la cuenta " + cuentaDestino + "\n¿Desea confirmar la transacción?",
+                        "Confirmar transferencia",
+                        JOptionPane.YES_NO_OPTION);
+
+                if (confirmacion == JOptionPane.YES_OPTION) {
+                    conexion.conexion_bd.commit();
+                    JOptionPane.showMessageDialog(this, mensaje);
+                    limpiarCampos();
+
+                    int otra = JOptionPane.showConfirmDialog(this,
+                            "¿Desea realizar otra transferencia?",
+                            "Transferencia completada",
+                            JOptionPane.YES_NO_OPTION);
+                    if (otra == JOptionPane.NO_OPTION) {
+                        this.dispose();
+                        new frm_menu().setVisible(true);
+                    }
+                } else {
+                    conexion.conexion_bd.rollback(); // Si no confirma, se deshace la operación
+                    JOptionPane.showMessageDialog(this, "Transferencia cancelada.");
+                }
+
+            } else {
+                JOptionPane.showMessageDialog(this, "No se pudo conectar a la base de datos.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+
+        } catch (SQLException ex) {
+            try {
+                conexion.conexion_bd.rollback();
+            } catch (SQLException e2) {
+                System.err.println("Error al hacer rollback: " + e2.getMessage());
+            }
+            JOptionPane.showMessageDialog(this, "Error al ejecutar la transferencia: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        } finally {
+            try {
+                if (stmt != null) {
+                    stmt.close();
+                }
+                conexion.cerrar_conexion();
+            } catch (SQLException ex) {
+                System.err.println("Error al cerrar recursos: " + ex.getMessage());
+            }
+        }
+
+
     }//GEN-LAST:event_btn_confirmarActionPerformed
 
-    private void txt_cuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_cuentaActionPerformed
+    private void txt_cuenta_destinoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_cuenta_destinoActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txt_cuentaActionPerformed
+    }//GEN-LAST:event_txt_cuenta_destinoActionPerformed
 
     private void btn_cancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_cancelarActionPerformed
         // TODO add your handling code here:
         this.dispose();
         new frm_menu().setVisible(true);
     }//GEN-LAST:event_btn_cancelarActionPerformed
+
+    private void txt_cuenta_origenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txt_cuenta_origenActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txt_cuenta_origenActionPerformed
 
     /**
      * @param args the command line arguments
@@ -208,8 +374,11 @@ public class frm_transferencia extends javax.swing.JFrame {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JLabel lbl_cuenta;
+    private javax.swing.JLabel lbl_cuenta1;
     private javax.swing.JLabel lbl_monto;
-    private javax.swing.JTextField txt_cuenta;
-    private javax.swing.JTextField txt_moneto;
+    private javax.swing.JLabel lbl_usuario;
+    private javax.swing.JTextField txt_cuenta_destino;
+    private javax.swing.JTextField txt_cuenta_origen;
+    private javax.swing.JTextField txt_monto_transferir;
     // End of variables declaration//GEN-END:variables
 }

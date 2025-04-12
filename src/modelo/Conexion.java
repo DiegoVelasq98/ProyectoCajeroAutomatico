@@ -16,8 +16,8 @@ public class Conexion {
     private final String puerto = "1521"; // Puerto por defecto de Oracle
     private final String sid = "orcl"; // Nombre del SID de tu instancia Oracle
     private final String urlConexion = String.format("jdbc:oracle:thin:@%s:%s:%s", host, puerto, sid); 
-    private final String usuario = "CAJERO";
-    private final String password = "CAJERO";
+    private final String usuario = "CAJERO2";
+    private final String password = "CAJERO2";
     private final String jdbc = "oracle.jdbc.OracleDriver";
 
     // Método para abrir la conexión a la bd
