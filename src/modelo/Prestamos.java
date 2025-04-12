@@ -58,7 +58,7 @@ public double calcularCuota() {
     double montoTotal = monto + interesTotal;
     return Math.round((montoTotal / plazo) * 100.0) / 100.0; // redondeo a 2 decimales
 }
-
+//Pruebas
 // Calcular total a pagar usando interés simple anual
 public double calcularTotal() {
     double interesTotal = monto * (interes / 100);

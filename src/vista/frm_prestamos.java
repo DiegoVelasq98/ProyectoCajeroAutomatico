@@ -223,7 +223,7 @@ public class frm_prestamos extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btn_calcularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btn_calcularActionPerformed
-      
+      //Pruebas
             try {
         double monto = Double.parseDouble(txt_monto.getText());
         int plazo = Integer.parseInt(txt_plazo.getText());

@@ -326,7 +326,7 @@ public class frm_retiro extends BaseForm {
         frm_monto_variable fr= new frm_monto_variable();
         fr.setVisible (true);
         dispose(); 
-       
+       //Pruebas
     }//GEN-LAST:event_montoVariableActionPerformed
 
     private void retiro500ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retiro500ActionPerformed
