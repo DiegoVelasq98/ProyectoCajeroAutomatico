@@ -27,3 +27,5 @@ JDBC
 * 7691-18-26253 Ana Maria Montufar Aguirre
 * 7690-21-1522 Jefferson Ramiro López Ramírez
 * 7690-16-3882 Diego Fernando Velásquez Pichilla
+* 7690-18-14490 MARLON ORLANDO RAMIREZ LUX
+* 7690-17-6433 Victor Isaías Quino Quino
